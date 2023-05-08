@@ -1,12 +1,15 @@
 package PIECES;
 
-import ENUM.Color;
-import BOARD_INFO.Tile;;
+import java.util.List;
+
+import BOARD_INFO.TILES.Tile;
+import ENGINE.Move;
+import ENUM.Color;;
 
 public class Knight extends Piece {
 
-    public Knight(final Color color) {
-        this.color = color;
+    public Knight(int pos, Color color) {
+        super(pos, color);
     }
 
     private Tile pos;
@@ -15,5 +18,11 @@ public class Knight extends Piece {
     @Override
     public void move() {
 
+    }
+
+    @Override
+    public List<Move> findMoves() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'findMoves'");
     }
 }

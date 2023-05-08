@@ -1,21 +1,27 @@
 package PIECES;
 
+import ENGINE.Move;
 import ENUM.Color;
-import BOARD_INFO.Tile;
+import java.util.List;
 
 public abstract class Piece {
     
-    protected int piece_num;
     protected Color color;
-    public Tile pos;
+    protected int pos;
     protected int value; 
 
-    public void move(){
-
+    public Piece(int pos, final Color color) {
+        this.pos = pos;
+        this.color = color;
     }
 
-    public void capture(){
+    public abstract List<Move> findMoves();
 
-    }
+    public void move(){}
+
+    public void capture(){}
 
 }
+
+
+

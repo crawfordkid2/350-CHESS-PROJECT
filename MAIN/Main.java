@@ -1,4 +1,4 @@
-package CHESS;
+package MAIN;
 
 public class Main {
 
