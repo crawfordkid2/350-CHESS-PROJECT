@@ -49,6 +49,9 @@ public class Board {
             builtBoard[i] = new FullTile(i, new Pawn(i, Color.BLACK));
         }
 
+        for (int i = 16; i < 48; i++) {
+            builtBoard[i] = new EmptyTile(i);
+        }
         return builtBoard;
     }
 
