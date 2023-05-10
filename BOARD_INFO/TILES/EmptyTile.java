@@ -4,8 +4,8 @@ import PIECES.Piece;
 
 public class EmptyTile extends Tile {
 
-    public EmptyTile(int coord) {
-        super(coord);
+    public EmptyTile(int coordX, int coordY) {
+        super(coordX, coordY);
     }
 
     @Override

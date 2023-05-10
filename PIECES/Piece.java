@@ -7,12 +7,18 @@ import java.util.List;
 public abstract class Piece {
     
     protected Color color;
-    protected int pos;
+    protected int posX;
+    protected int posY;
     protected int value; 
 
-    public Piece(int pos, final Color color) {
-        this.pos = pos;
+    public Piece(int posX, int posY, final Color color) {
+        this.posX = posX;
+        this.posY = posY;
         this.color = color;
+    }
+
+    public Color getColor(){
+        return this.color;
     }
 
     public abstract List<Move> findMoves();

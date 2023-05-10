@@ -4,10 +4,12 @@ import PIECES.Piece;
 
 public abstract class Tile {
     
-    int coord;
+    int coordX;
+    int coordY;
 
-    public Tile(int coord) {
-        this.coord = coord;
+    public Tile(int coordX, int coordY) {
+        this.coordX = coordX;
+        this.coordY = coordY;
     }
 
     public abstract boolean isFull();

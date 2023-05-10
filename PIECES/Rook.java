@@ -8,8 +8,8 @@ import ENUM.Color;;
 
 public class Rook extends Piece {
 
-    public Rook(int pos, Color color) {
-        super(pos, color);
+    public Rook(int posX, int posY, Color color) {
+        super(posX, posY, color);
     }
 
     private Tile pos;

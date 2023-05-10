@@ -8,8 +8,8 @@ import ENUM.Color;;
 
 public class Knight extends Piece {
 
-    public Knight(int pos, Color color) {
-        super(pos, color);
+    public Knight(int posX, int posY, Color color) {
+        super(posX, posY, color);
     }
 
     private Tile pos;
