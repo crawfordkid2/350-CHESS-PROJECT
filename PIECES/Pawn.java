@@ -16,8 +16,28 @@ public class Pawn extends Piece {
     public int value = 1;
     
     @Override
-    public void move() {
+    public void move(int newX, int newY) {
+        if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
+            System.out.print("Invalid Input, Out of Bounds");
+            return;
+        }
 
+        if(this.color == Color.BLACK){
+            if(newY == this.posY-1 && newX == this.posX){
+                this.posY = newY;
+            }
+            else{
+                System.out.print("Invalid Pawn Move");
+            }
+        }
+        else if(this.color == Color.WHITE){
+            if(newY == this.posY+1 && newX == this.posX){
+                this.posY = newY;
+            }
+            else{
+                System.out.print("Invalid Pawn Move");
+            }
+        }
     }
 
     public void twoSpaceMove() {

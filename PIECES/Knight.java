@@ -16,8 +16,22 @@ public class Knight extends Piece {
     public int value = 5;
     
     @Override
-    public void move() {
+    public void move(int newX, int newY) {
+        if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
+            System.out.print("Invalid Input, Out of Bounds");
+            return;
+        }
 
+        int diffX = Math.abs(newX - this.posX);
+        int diffY = Math.abs(newY - this.posY);
+
+        if(diffX == 1 && diffY == 2 || diffX == 2 && diffY == 1){
+            this.posX = newX;
+            this.posY = newY;
+        }
+        else{
+            System.out.print("Invalid Knight Move.");
+        }
     }
 
     @Override

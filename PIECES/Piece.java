@@ -23,7 +23,7 @@ public abstract class Piece {
 
     public abstract List<Move> findMoves();
 
-    public void move(){}
+    public void move(int newX, int newY){}
 
     public void capture(){}
 

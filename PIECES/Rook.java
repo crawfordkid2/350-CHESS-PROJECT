@@ -17,8 +17,19 @@ public class Rook extends Piece {
     public boolean canCastle = true;
 
     @Override
-    public void move() {
+    public void move(int newX, int newY) {
+        if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
+            System.out.print("Invalid Input, Out of Bounds");
+            return;
+        }
 
+        if(newX != this.posX && newY == this.posY || newX == this.posX && newY != this.posY){
+            this.posX = newX;
+            this.posY = newY;
+        }
+        else{
+            System.out.print("Invalid Rook Move.");
+        }
     }
 
     @Override
