@@ -15,9 +15,15 @@ public class Main {
 
         while(exit == false){
             System.out.print("Enter move: ");
-            currMove = input.nextLine();
-            if(game.tryMove(currMove)){
-                
+            currMove = input.nextLine().toLowerCase();
+            if(currMove.equals("quit")){
+                return;
+            }
+            else if(currMove.equals("restart")){
+                game.restart();
+            }
+            else if(game.tryMove(currMove)){
+                game.board.printBoard();
             }
             else{
                 System.out.println("Try Again");
