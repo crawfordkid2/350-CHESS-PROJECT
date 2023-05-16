@@ -16,10 +16,10 @@ public class Bishop extends Piece {
     public int value = 5;
     
     @Override
-    public void move(int newX, int newY) {
+    public boolean move(int newX, int newY) {
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
-            return;
+            return false;
         }
         int diffX = Math.abs(newX - this.posX);
         int diffY = Math.abs(newY - this.posY);
@@ -27,9 +27,11 @@ public class Bishop extends Piece {
         if(diffX == diffY){
             this.posY = newY;
             this.posX = newX;
+            return true;
         }
         else{
             System.out.print("Invalid bishop move.");
+            return false;
         }
 
     }

@@ -18,10 +18,10 @@ public class King extends Piece {
     public boolean canCastle = true;
     
     @Override
-    public void move(int newX, int newY) {
+    public boolean move(int newX, int newY) {
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
-            return;
+            return false;
         }
 
         int diffX = Math.abs(newX - this.posX);
@@ -30,9 +30,11 @@ public class King extends Piece {
         if(diffX == 1 && diffY == 0 ||diffX == 0 && diffY == 1 ||diffX == 1 && diffY == 1){
             this.posX = newX;
             this.posY = newY;
+            return true;
         }
         else{
-            System.out.print("Invalid King Move.");
+            System.out.println("Invalid King Move.");
+            return false;
         }
     }
 
