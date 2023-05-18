@@ -1,7 +1,9 @@
 package PIECES;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import BOARD_INFO.Board;
 import BOARD_INFO.TILES.Tile;
 import ENGINE.Move;
 import ENUM.Color;;
@@ -24,8 +26,6 @@ public class Rook extends Piece {
         }
 
         if(newX != this.posX && newY == this.posY || newX == this.posX && newY != this.posY){
-            this.posX = newX;
-            this.posY = newY;
             return true;
         }
         else{
@@ -35,8 +35,11 @@ public class Rook extends Piece {
     }
 
     @Override
-    public List<Move> findMoves() {
+    public List<Move> findMoves(Board b) {
+        
+        List<Move> moves = new ArrayList<>();
+
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findMoves'");
+        return moves;
     }
 }

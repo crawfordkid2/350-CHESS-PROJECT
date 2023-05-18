@@ -33,6 +33,7 @@ public class GameEngine {
             if(piece.move(xTo, yTo)){
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
+                piece.setPos(xTo, yTo);
                 return true;
             }
         }

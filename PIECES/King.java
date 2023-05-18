@@ -1,7 +1,9 @@
 package PIECES;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import BOARD_INFO.Board;
 import BOARD_INFO.TILES.Tile;
 import ENGINE.Move;
 import ENUM.Color;;
@@ -14,7 +16,7 @@ public class King extends Piece {
 
     private Tile pos;
     public int value = 20;
-    public boolean isChecked;
+    public boolean isChecked = false;
     public boolean canCastle = true;
     
     @Override
@@ -28,8 +30,6 @@ public class King extends Piece {
         int diffY = Math.abs(newY - this.posY);
 
         if(diffX == 1 && diffY == 0 ||diffX == 0 && diffY == 1 ||diffX == 1 && diffY == 1){
-            this.posX = newX;
-            this.posY = newY;
             return true;
         }
         else{
@@ -38,9 +38,25 @@ public class King extends Piece {
         }
     }
 
+    //DOES NOT CURRENTLY CHECK IF MOVE PUTS KING IN A CHECK
     @Override
-    public List<Move> findMoves() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findMoves'");
+    public List<Move> findMoves(Board b) {
+
+        List<Move> moves = new ArrayList<>();
+
+        if (this.canCastle = true) {
+            //check if rank is clear between rook, to implement, add move if so
+        }
+
+        for(int i = 0; i < 8; i++) {
+            for(int j = 0; j < 8; j++){
+                if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
+                    moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
+                }
+            }
+        }
+        return moves;
+
+        
     }
 }
