@@ -68,7 +68,7 @@ public abstract class Piece {
                     else if(i == prevX && j == prevY){
                         continue;
                     }
-                    else if(currTile.getColor() != null){
+                    else if(currTile.getColor() != Color.EMPTY){
                         return false;
                     }
                 }
@@ -88,15 +88,15 @@ public abstract class Piece {
                     }
                 }
                 else if(i == prevX && j == prevY){
-                    i = i + xSign;
-                    j = j + ySign;
+                    i += xSign;
+                    j += ySign;
                     continue;
                 }
                 else if(currTile.getClass() != EmptyTile.class){
                     return false;
                 }
-                i = i + xSign;
-                j = j + ySign;
+                i += xSign;
+                j += ySign;
             }
         }
         
