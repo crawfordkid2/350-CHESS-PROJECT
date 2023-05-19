@@ -50,7 +50,7 @@ public abstract class Piece {
         
         Tile currTile = null;
 
-        //Different if diagnal
+        //Different if diagonal
         if(prevX == newX || prevY == newY){
             int xMin = Math.min(prevX, newX);
             int yMin = Math.min(prevY, newY);
