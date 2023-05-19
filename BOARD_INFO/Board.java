@@ -58,11 +58,11 @@ public class Board {
         
     }
 
-    public Tile getTile(int coordX, int coordY) {
+    public Tile getTile(final int coordX, final int coordY) {
         return board[coordX][coordY];
     }
 
-    public void setTile(int coordX, int coordY, Tile tile){
+    public void setTile(final int coordX, final int coordY, final Tile tile){
         this.board[coordX][coordY] = tile;
     }
 

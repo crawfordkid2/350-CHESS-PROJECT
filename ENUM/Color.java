@@ -2,5 +2,6 @@ package ENUM;
 
 public enum Color {
     WHITE,
-    BLACK
+    BLACK,
+    EMPTY
 }
