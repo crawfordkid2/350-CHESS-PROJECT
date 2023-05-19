@@ -10,8 +10,8 @@ import ENUM.Color;;
 
 public class King extends Piece {
 
-    public King(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public King(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -33,7 +33,7 @@ public class King extends Piece {
         int diffY = Math.abs(newY - this.posY);
 
         if(diffX == 1 && diffY == 0 ||diffX == 0 && diffY == 1 ||diffX == 1 && diffY == 1){
-            return true;
+            return collsionCheck(move);
         }
         else{
             System.out.println("Invalid King Move.");

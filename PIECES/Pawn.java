@@ -11,8 +11,8 @@ import ENUM.Color;;
 
 public class Pawn extends Piece {
 
-    public Pawn(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public Pawn(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -31,10 +31,10 @@ public class Pawn extends Piece {
         // firstmove = false is temporary implementation, will need to be changed once Move list is working
         if(this.color == Color.BLACK){
             if(newY == this.posY-1 && newX == this.posX){
-                return true;
+                return collsionCheck(move);
             }
             else if(newY == this.posY-2 && this.firstMove){
-                return true;
+                return collsionCheck(move);
             }
             else{
 //                System.out.println("Invalid Pawn Move");
@@ -43,10 +43,10 @@ public class Pawn extends Piece {
         }
         else if(this.color == Color.WHITE){
             if(newY == this.posY+1 && newX == this.posX){
-                return true;
+                return collsionCheck(move);
             }
             else if(newY == this.posY+2 && this.firstMove){
-                return true;
+                return collsionCheck(move);
             }
             else{
 //                System.out.println("Invalid Pawn Move");

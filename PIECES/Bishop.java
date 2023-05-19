@@ -10,8 +10,8 @@ import ENUM.Color;;
 
 public class Bishop extends Piece {
 
-    public Bishop(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public Bishop(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -30,7 +30,7 @@ public class Bishop extends Piece {
         int diffY = Math.abs(newY - this.posY);
 
         if(diffX == diffY){
-            return true;
+            return collsionCheck(move);
         }
         else{
             System.out.print("Invalid bishop move.");

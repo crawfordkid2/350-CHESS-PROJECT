@@ -13,11 +13,13 @@ public abstract class Piece {
     protected int posX;
     protected int posY;
     protected int value; 
+    protected Board board;
 
-    public Piece(int posX, int posY, final Color color) {
+    public Piece(int posX, int posY, final Color color, Board board) {
         this.posX = posX;
         this.posY = posY;
         this.color = color;
+        this.board = board;
     }
 
     public Color getColor() {
@@ -39,30 +41,62 @@ public abstract class Piece {
         this.posY = newY;
     }
 
-    public boolean collsionCheck(Move move, Board board){
+    public boolean collsionCheck(Move move){
         int prevX = move.getPrev().getCoordX();
         int prevY = move.getPrev().getCoordY();
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
 
-        int xMin = Math.min(prevX, newX);
-        int yMin = Math.min(prevY, newY);
-        int xMax = Math.max(prevX, newX);
-        int yMax = Math.max(prevY, newY);
+        
         Tile currTile = null;
 
-        for(int i = xMin; i <= xMax; i++){
-            for(int j = yMin; j <= yMax; j++){
-                currTile = board.getTile(i, j);
+        //Different if diagnal
+        if(prevX == newX || prevY == newY){
+            int xMin = Math.min(prevX, newX);
+            int yMin = Math.min(prevY, newY);
+            int xMax = Math.max(prevX, newX);
+            int yMax = Math.max(prevY, newY);
+            for(int i = xMin; i <= xMax; i++){
+                for(int j = yMin; j <= yMax; j++){
+                    currTile = this.board.getTile(i, j);
 
+                    if(i == newX && j == newY){
+                        if(currTile.getColor() == this.color){
+                            return false;
+                        }
+                    }
+                    else if(i == prevX && j == prevY){
+                        continue;
+                    }
+                    else if(currTile.getColor() != null){
+                        return false;
+                    }
+                }
+            }
+        }
+        else{
+            int i = prevX;
+            int j = prevY;
+            int xSign = (prevX > newX) ? -1 : 1;
+            int ySign = (prevY > newY) ? -1 : 1;
+            while(i != newX && j != newY){
+                currTile = this.board.getTile(i, j);
+                
                 if(i == newX && j == newY){
                     if(currTile.getColor() == this.color){
                         return false;
                     }
                 }
-                else if(currTile.getColor() != null){
+                else if(i == prevX && j == prevY){
+                    i = i + xSign;
+                    j = j + ySign;
+                    continue;
+                }
+                else if(currTile.getClass() != EmptyTile.class){
                     return false;
                 }
+                i = i + xSign;
+                j = j + ySign;
             }
         }
         

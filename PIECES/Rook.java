@@ -10,8 +10,8 @@ import ENUM.Color;;
 
 public class Rook extends Piece {
 
-    public Rook(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public Rook(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -29,7 +29,7 @@ public class Rook extends Piece {
         }
 
         if(newX != this.posX && newY == this.posY || newX == this.posX && newY != this.posY){
-            return true;
+            return collsionCheck(move);
         }
         else{
             System.out.println("Invalid Rook Move.");

@@ -10,8 +10,8 @@ import ENUM.Color;;
 
 public class Queen extends Piece {
 
-    public Queen(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public Queen(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -30,7 +30,7 @@ public class Queen extends Piece {
         int diffY = Math.abs(newY - this.posY);
 
         if(newX != this.posX && newY == this.posY || newX == this.posX && newY != this.posY || diffX == diffY){
-            return true;
+            return collsionCheck(move);
         }
         else{
             System.out.println("Invalid Queen Move.");
