@@ -20,7 +20,10 @@ public class Pawn extends Piece {
     private boolean firstMove = true;
     
     @Override
-    public boolean move(int newX, int newY) {
+    public boolean move(Move move) {
+        int newX = move.getNew().getCoordX();
+        int newY = move.getNew().getCoordY();
+
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
             return false;
@@ -65,31 +68,31 @@ public class Pawn extends Piece {
     public List<Move> findMoves(Board b) {
         List<Move> moves = new ArrayList<>();
 
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++){
-                if(move(i, j) && (b.getTile(i, j) instanceof EmptyTile)) {
-                    moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-                }
-            }
-        }
-        //Pawn capture check, this may cause error for edge cases, yet to test
-        if (this.color == Color.BLACK) {
-            if((posX != 7) && b.getTile(posX + 1, posY - 1).getColor() == Color.WHITE){
-                moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-            }
-            if((posX != 0) && b.getTile(posX - 1, posY - 1).getColor() == Color.WHITE){
-                moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-            }
-        }
+        // for(int i = 0; i < 8; i++) {
+        //     for(int j = 0; j < 8; j++){
+        //         if(move(i, j) && (b.getTile(i, j) instanceof EmptyTile)) {
+        //             moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
+        //         }
+        //     }
+        // }
+        // //Pawn capture check, this may cause error for edge cases, yet to test
+        // if (this.color == Color.BLACK) {
+        //     if((posX != 7) && b.getTile(posX + 1, posY - 1).getColor() == Color.WHITE){
+        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
+        //     }
+        //     if((posX != 0) && b.getTile(posX - 1, posY - 1).getColor() == Color.WHITE){
+        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
+        //     }
+        // }
 
-        else {
-            if((posX != 7) && b.getTile(posX + 1, posY + 1).getColor() == Color.WHITE){
-                moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-            }
-            if((posX != 0) && b.getTile(posX - 1, posY + 1).getColor() == Color.WHITE){
-                moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-            }
-        }
+        // else {
+        //     if((posX != 7) && b.getTile(posX + 1, posY + 1).getColor() == Color.WHITE){
+        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
+        //     }
+        //     if((posX != 0) && b.getTile(posX - 1, posY + 1).getColor() == Color.WHITE){
+        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
+        //     }
+        // }
         return moves;
 
     }

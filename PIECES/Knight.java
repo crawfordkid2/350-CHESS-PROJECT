@@ -18,7 +18,10 @@ public class Knight extends Piece {
     public int value = 5;
     
     @Override
-    public boolean move(int newX, int newY) {
+    public boolean move(Move move) {
+        int newX = move.getNew().getCoordX();
+        int newY = move.getNew().getCoordY();
+
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
             return false;
@@ -41,13 +44,13 @@ public class Knight extends Piece {
 
         List<Move> moves = new ArrayList<>();
 
-        for(int i = 0; i < 8; i++) {
-            for(int j = 0; j < 8; j++){
-                if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-                    moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-                }
-            }
-        }
+        // for(int i = 0; i < 8; i++) {
+        //     for(int j = 0; j < 8; j++){
+        //         if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
+        //             moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
+        //         }
+        //     }
+        // }
         return moves;
     }
 }

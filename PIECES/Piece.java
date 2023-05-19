@@ -5,6 +5,7 @@ import ENUM.Color;
 import java.util.List;
 
 import BOARD_INFO.Board;
+import BOARD_INFO.TILES.*;
 
 public abstract class Piece {
     
@@ -25,7 +26,7 @@ public abstract class Piece {
 
     public abstract List<Move> findMoves(Board b);
 
-    public abstract boolean move(int newX, int newY);
+    public abstract boolean move(Move move);
 
     public void capture(){}
 
@@ -36,6 +37,36 @@ public abstract class Piece {
     public void setPos(int newX, int newY) {
         this.posX = newX;
         this.posY = newY;
+    }
+
+    public boolean collsionCheck(Move move, Board board){
+        int prevX = move.getPrev().getCoordX();
+        int prevY = move.getPrev().getCoordY();
+        int newX = move.getNew().getCoordX();
+        int newY = move.getNew().getCoordY();
+
+        int xMin = Math.min(prevX, newX);
+        int yMin = Math.min(prevY, newY);
+        int xMax = Math.max(prevX, newX);
+        int yMax = Math.max(prevY, newY);
+        Tile currTile = null;
+
+        for(int i = xMin; i <= xMax; i++){
+            for(int j = yMin; j <= yMax; j++){
+                currTile = board.getTile(i, j);
+
+                if(i == newX && j == newY){
+                    if(currTile.getColor() == this.color){
+                        return false;
+                    }
+                }
+                else if(currTile.getColor() != null){
+                    return false;
+                }
+            }
+        }
+        
+        return true;
     }
 
 }

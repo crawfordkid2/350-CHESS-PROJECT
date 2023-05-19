@@ -19,7 +19,10 @@ public class Rook extends Piece {
     public boolean canCastle = true;
 
     @Override
-    public boolean move(int newX, int newY) {
+    public boolean move(Move move) {
+        int newX = move.getNew().getCoordX();
+        int newY = move.getNew().getCoordY();
+        
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
             return false;
