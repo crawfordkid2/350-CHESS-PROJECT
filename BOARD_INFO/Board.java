@@ -67,7 +67,7 @@ public class Board {
     }
 
     public void printBoard(){
-        for(int y = 7; y >= 0;y-- )
+        for(int y = 7; y >= 0;y--)
         {
             System.out.print("\n" + (y+1) + " | ");
             for(int x = 0; x <= 7; x++){
