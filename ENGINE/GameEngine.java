@@ -4,6 +4,7 @@ import BOARD_INFO.Board;
 import BOARD_INFO.TILES.EmptyTile;
 import BOARD_INFO.TILES.FullTile;
 import BOARD_INFO.TILES.Tile;
+import ENUM.Color;
 import PIECES.*;
 
 public class GameEngine {
@@ -30,11 +31,12 @@ public class GameEngine {
         Tile toTile = this.board.getTile(xTo, yTo);
 
         //Checks if piece exists and if there is either an empty tile or an opponent on the new tile. 
-        if(piece != null && (toTile.getPiece() == null || toTile.getPiece().getColor() != piece.getColor())){
+        if(piece != null && (toTile.getPiece() == null || toTile.getPiece().getColor() != piece.getColor()) && ((piece.getColor() == Color.BLACK && this.turn % 2 == 1) || (piece.getColor() == Color.WHITE && this.turn % 2 == 0))){
             if(piece.move(new Move(fromTile, toTile))){
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
                 piece.setPos(xTo, yTo);
+                this.turn++;
                 return true;
             }
         }
