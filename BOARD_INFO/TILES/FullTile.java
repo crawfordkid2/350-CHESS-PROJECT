@@ -1,6 +1,7 @@
 package BOARD_INFO.TILES;
 
 
+import ENUM.Color;
 import PIECES.Piece;
 
 public class FullTile extends Tile {
@@ -18,4 +19,6 @@ public class FullTile extends Tile {
     @Override
     public Piece getPiece() {return this.piece;}
     
+    @Override
+    public Color getColor() {return this.piece.getColor();}
 }

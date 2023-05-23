@@ -26,13 +26,15 @@ public class GameEngine {
         int yTo = moveString.charAt(3)-49;
 
         Piece piece = this.board.getTile(xFrom, yFrom).getPiece();
+        Tile fromTile = this.board.getTile(xFrom, yFrom);
         Tile toTile = this.board.getTile(xTo, yTo);
 
         //Checks if piece exists and if there is either an empty tile or an opponent on the new tile. 
         if(piece != null && (toTile.getPiece() == null || toTile.getPiece().getColor() != piece.getColor())){
-            if(piece.move(xTo, yTo)){
+            if(piece.move(new Move(fromTile, toTile))){
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
+                piece.setPos(xTo, yTo);
                 return true;
             }
         }
