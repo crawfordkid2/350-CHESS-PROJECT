@@ -1,15 +1,17 @@
 package PIECES;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import BOARD_INFO.Board;
 import BOARD_INFO.TILES.Tile;
 import ENGINE.Move;
 import ENUM.Color;;
 
 public class Rook extends Piece {
 
-    public Rook(int posX, int posY, Color color) {
-        super(posX, posY, color);
+    public Rook(int posX, int posY, Color color, Board board) {
+        super(posX, posY, color, board);
     }
 
     private Tile pos;
@@ -17,16 +19,17 @@ public class Rook extends Piece {
     public boolean canCastle = true;
 
     @Override
-    public boolean move(int newX, int newY) {
+    public boolean move(Move move) {
+        int newX = move.getNew().getCoordX();
+        int newY = move.getNew().getCoordY();
+        
         if(newX < 0 || newX > 7 || newY < 0 || newY > 7){
             System.out.print("Invalid Input, Out of Bounds");
             return false;
         }
 
         if(newX != this.posX && newY == this.posY || newX == this.posX && newY != this.posY){
-            this.posX = newX;
-            this.posY = newY;
-            return true;
+            return collsionCheck(move);
         }
         else{
             System.out.println("Invalid Rook Move.");
@@ -35,8 +38,11 @@ public class Rook extends Piece {
     }
 
     @Override
-    public List<Move> findMoves() {
+    public List<Move> findMoves(Board b) {
+        
+        List<Move> moves = new ArrayList<>();
+
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'findMoves'");
+        return moves;
     }
 }
