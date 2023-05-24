@@ -1,9 +1,16 @@
 package GUI;
 
+import BOARD_INFO.Board;
+import ENGINE.GameEngine;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,6 +23,8 @@ public class BoardDisplay {
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10,10);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400,350);
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
+    private final GameEngine ChessEngine;
+    private static String pieceIconPath = "icons/pieces/";
 
     public BoardDisplay() {
         this.gameFrame = new JFrame("Chess app");
@@ -23,6 +32,7 @@ public class BoardDisplay {
         final JMenuBar tableMenuBar = createTableMenuBar();
         this.gameFrame.setJMenuBar(tableMenuBar);
         this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+        this.ChessEngine = new GameEngine(new Board());
         this.boardPanel = new BoardPanel();
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
@@ -84,15 +94,39 @@ public class BoardDisplay {
     private class TilePanel extends JPanel {
 
         private final int tileId;
+        private final int xCord;
+        private final int yCord;
 
         TilePanel(final BoardPanel boardPanel, final int tileId) {
             super(new GridBagLayout());
-            this.tileId = tileId;
+            this.tileId = tileId; // for color and board building logic
+
+            // ran into an issue here where we logically approached the engine with
+            // coords 0,0 in the bottom left of the board, but Swing builds tiles top to bottom
+            // there is no easy way to fix this in Swing, but inverting the coordinates works
+            int invertedID = Math.abs(tileId - 63);
+            this.xCord = invertedID % 8;
+            this.yCord = invertedID / 8;
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
+            assignPieceIcon(ChessEngine);
             validate();
         }
 
+        private void assignPieceIcon(final GameEngine game) {
+            this.removeAll();
+            if (game.board.getTile(this.xCord, this.yCord).isFull()) {
+                try {
+                    // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.gif
+                    final BufferedImage image = ImageIO.read(new File(pieceIconPath +
+                            game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
+                            game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".gif"));
+                    add(new JLabel(new ImageIcon(image)));
+                } catch (IOException e) {
+                    e.printStackTrace();;
+                }
+            }
+        }
         private void assignTileColor() {
             boolean isLight = ((tileId + tileId / 8) % 2 == 0);
             setBackground(isLight ? lightTileColor : darkTileColor);
