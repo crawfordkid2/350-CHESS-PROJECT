@@ -26,7 +26,7 @@ public class Board {
         builtBoard[0][7] = new FullTile(0, 7, new Rook(0, 7, Color.BLACK, this));
         builtBoard[1][7] = new FullTile(1, 7, new Knight(1, 7, Color.BLACK, this));
         builtBoard[2][7] = new FullTile(2, 7, new Bishop(2, 7, Color.BLACK, this));
-        builtBoard[3][7] = new FullTile(2, 7, new King(3, 7, Color.BLACK, this));
+        builtBoard[3][7] = new FullTile(3, 7, new King(3, 7, Color.BLACK, this));
         builtBoard[4][7] = new FullTile(4, 7, new Queen(4, 7, Color.BLACK, this));
         builtBoard[5][7] = new FullTile(5, 7, new Bishop(5, 7, Color.BLACK, this));
         builtBoard[6][7] = new FullTile(6, 7, new Knight(6, 7, Color.BLACK, this));
