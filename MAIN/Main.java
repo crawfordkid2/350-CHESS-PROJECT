@@ -34,7 +34,7 @@ public class Main {
             }
         }
         else {
-            BoardDisplay exampleBoard = new BoardDisplay();
+            new BoardDisplay();
         }
     }
 }
