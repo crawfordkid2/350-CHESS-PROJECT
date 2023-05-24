@@ -3,15 +3,21 @@ package MULTIPLAYER;
 import java.io.*;
 import java.net.*;
 
+import ENGINE.GameEngine;
+import BOARD_INFO.*;
+
 public class GameServer{
     private ServerSocket socket;
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
+    private int turns;
+    private GameEngine game;
 
     public GameServer(){
         this.numPlayers = 0;
-
+        this.turns = 0;
+        this.game = new GameEngine(new Board());
         try{
             this.socket = new ServerSocket(27015);
         }
@@ -62,15 +68,54 @@ public class GameServer{
         }
 
         public void run(){
+            String currMove = "";
+            String output = "";
             try {
                 dataOut.writeInt(playerID);
+                dataOut.writeUTF(game.board.toString());
                 dataOut.flush();
+                
                 while(true){
-
+                    if(playerID == 1){
+                        currMove = dataIn.readUTF();
+                        System.out.println("Player 1 Move: " + currMove);
+                        output = checkMove(currMove);
+                        player2.sendMove(output);
+                    }
+                    else if(playerID == 2){
+                        currMove = dataIn.readUTF();
+                        System.out.println("Player 2 Move: " + currMove);
+                        output = checkMove(currMove);
+                        player1.sendMove(output);
+                    }
+                    dataOut.writeUTF(output);
+                    dataOut.flush();
                 }
             }
             catch(IOException ex){
                 System.out.println("IOException in run() SSC");
+            }
+        }
+
+        public String checkMove(String currMove){
+            if(currMove.equals("quit")){
+                return "";
+            }
+            else if(game.tryMove(currMove)){              
+                turns++;
+                return game.board.toString();
+            }
+            else{
+                return "Try Again";
+            }
+        }
+        public void sendMove(String move){
+            try{
+                dataOut.writeUTF(move);
+                dataOut.flush();
+            }
+            catch(IOException ex){
+                System.out.println("IOException in sendMove() server.");
             }
         }
     }
