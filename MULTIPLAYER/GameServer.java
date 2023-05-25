@@ -11,12 +11,11 @@ public class GameServer{
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
-    private int turns;
+    
     private GameEngine game;
 
     public GameServer(){
         this.numPlayers = 0;
-        this.turns = 0;
         this.game = new GameEngine(new Board());
         try{
             this.socket = new ServerSocket(27015);
@@ -54,10 +53,12 @@ public class GameServer{
         private DataInputStream dataIn;
         private DataOutputStream dataOut;
         private int playerID;
+        private int turns;
 
         public ServerSideConnection(Socket s, int id){
             this.socket = s;
             this.playerID = id;
+            this.turns = 0;
             try{
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
@@ -102,7 +103,7 @@ public class GameServer{
                 return "";
             }
             else if(game.tryMove(currMove)){              
-                turns++;
+                this.turns++;
                 return game.board.toString();
             }
             else{

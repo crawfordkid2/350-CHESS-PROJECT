@@ -7,139 +7,83 @@ import java.util.Scanner;
 import BOARD_INFO.Board;
 import ENGINE.GameEngine;
 import GUI.BoardDisplay;
+import MULTIPLAYER.Player;
 
 public class Main {
-    public ClientSideConnection csc;
-    private int playerID;
-    private int otherPlayer;
-    private String boardString;
-    private int turns;
-
-    public void connectToServer(){
-        csc = new ClientSideConnection();
-    }
-
-    public void startReceivingMoves(){
-        Thread t = new Thread(new Runnable(){
-            public void run(){
-                while(true){
-                    System.out.println(csc.receiveMove());
-                }
-            }
-        });
-        t.start();
-    }
-
-    public void updateTurn(){
-        String update = csc.receiveMove();
-        System.out.println(update);
-        System.out.println("Enter move: ");
-    }
-
     
-
-    private class ClientSideConnection{
-
-        private Socket socket;
-        private DataInputStream dataIn;
-        private DataOutputStream dataOut;
-
-        public ClientSideConnection(){
-            try{
-                socket = new Socket("localhost", 27015);
-                dataIn = new DataInputStream(socket.getInputStream());
-                dataOut = new DataOutputStream(socket.getOutputStream());
-                playerID = dataIn.readInt();
-                System.out.println("Connected as Player " + playerID);
-            }
-            catch(IOException ex){
-                System.out.println("IOException from CSC constructor");
-            }
-        }
-
-        public void sendMove(String move){
-            try{
-                dataOut.writeUTF(move);
-                dataOut.flush();
-            }
-            catch(IOException ex){
-                System.out.println("IOException in sendMove().");
-            }
-        }
-
-        public String receiveMove(){
-            String newBoard = "";
-            try{
-                newBoard = dataIn.readUTF();
-                //System.out.println(newBoard);
-            }
-            catch(IOException ex){
-                System.out.println("IOException in receiveMove().");
-            }
-
-            return newBoard;
-        }
-    }
 
     public static void main(String[] args) {
         
             if (args.length == 0) {
-                Main m = new Main();
-            m.connectToServer();
-            try{
-                m.boardString = m.csc.dataIn.readUTF();
-            }
-            catch (IOException ex){
-                System.out.println("IOException in board print.");
-            }
-            if(m.playerID == 1){
-                m.otherPlayer = 2;
-            }
-            else{
-                m.otherPlayer = 1;
-                Thread t = new Thread( new Runnable(){
-                    public void run(){
-                        m.updateTurn();
-                    }
-                });
-                t.start();
-            }
-            
-            System.out.println(m.boardString);
-            boolean exit = false;
-            Scanner input = new Scanner(System.in);
-            String currMove = "";
-            System.out.print("Enter move: ");
-            while(exit == false){
-                
-                currMove = input.nextLine().toLowerCase();
-                if(currMove.equals("quit")){
-                    return;
+                boolean exit = false;
+                String currMove = "";
+                System.out.print("Local or Online (L/O): ");
+                Scanner input = new Scanner(System.in);
+                String choice = input.nextLine().toLowerCase();
+
+                while(!choice.equals("o") && !choice.equals("l")){
+                    System.out.print("Invalid Input (L/O): ");
+                    choice = input.nextLine().toLowerCase();
                 }
-                else{
-                    m.csc.sendMove(currMove);
+                if(choice.equals("o")){
+                    Player player = new Player();
+                    player.connectToServer();
+                    try{
+                        player.boardString = player.csc.dataIn.readUTF();
+                    }
+                    catch (IOException ex){
+                        System.out.println("IOException in board print.");
+                    }
+                    if(player.playerID != 1){
+                        Thread t = new Thread( new Runnable(){
+                            public void run(){
+                                player.updateTurn();
+                            }
+                        });
+                        t.start();
+                    }
                     
+                    System.out.println(player.boardString);
+                    
+                    System.out.print("Enter move: ");
+                    while(exit == false){
+                        
+                        currMove = input.nextLine().toLowerCase();
+                        if(currMove.equals("quit")){
+                            return;
+                        }
+                        else{
+                            player.csc.sendMove(currMove);
+                            
+                        }
+                        Thread t2 = new Thread( new Runnable(){
+                            public void run(){
+                                player.updateTurn();
+                                player.updateTurn();
+                            }
+                        });
+                        t2.start();
                 }
-                //m.startReceivingMoves();
-                Thread t2 = new Thread( new Runnable(){
-                    public void run(){
-                        m.updateTurn();
-                        m.updateTurn();
+            }
+            else if(choice.equals("l")){
+                GameEngine game = new GameEngine(new Board());
+                game.board.printBoard();
+                while(exit == false){
+                    System.out.print("Enter move: ");
+                    currMove = input.nextLine().toLowerCase();
+                    if(currMove.equals("quit")){
+                        return;
                     }
-                });
-                t2.start();
-                // if(currMove.equals("quit")){
-                //     return;
-                // }
-                // else if(currMove.equals("restart")){
-                //     game.restart();
-                // }
-                // else if(game.tryMove(currMove)){
-                //     game.board.printBoard();
-                // }
-                // else{
-                //     System.out.println("Try Again");
-                // }
+                    else if(currMove.equals("restart")){
+                        game.restart();
+                    }
+                    else if(game.tryMove(currMove)){
+                        game.board.printBoard();
+                    }
+                    else{
+                        System.out.println("Try Again");
+                    }
+                }
             }
         }
         else {
