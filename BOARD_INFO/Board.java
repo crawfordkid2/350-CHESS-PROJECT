@@ -105,4 +105,47 @@ public class Board {
         System.out.println("\n--------------------");
         System.out.println("  | A B C D E F G H ");
     }
+
+    public String toString(){
+        String boardString = "";
+        for(int y = 7; y >= 0;y--)
+        {
+            boardString += "\n" + (y+1) + " | ";
+            for(int x = 0; x <= 7; x++){
+                String value = ".";
+                Tile currTile = this.board[x][y];
+                if(currTile.isFull()){
+
+                    if(currTile.getPiece().getClass() == Pawn.class){
+                        value = "p";
+                    }
+                    else if(currTile.getPiece().getClass() == Rook.class){
+                        value = "r";
+                    }
+                    else if(currTile.getPiece().getClass() == Knight.class){
+                        value = "n";
+                    }
+                    else if(currTile.getPiece().getClass() == Bishop.class){
+                        value = "b";
+                    }
+                    else if(currTile.getPiece().getClass() == Queen.class){
+                        value = "q";
+                    }
+                    else if(currTile.getPiece().getClass() == King.class){
+                        value = "k";
+                    }
+
+                    if(currTile.getPiece().getColor() == Color.BLACK){
+                        value = value.toUpperCase();
+                    }
+                }
+                boardString += value + " ";
+            }
+        }
+
+        boardString += "\n--------------------";
+        boardString += "\n  | A B C D E F G H ";
+
+        return boardString;
+    }
 }

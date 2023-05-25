@@ -7,58 +7,82 @@ import java.util.Scanner;
 import BOARD_INFO.Board;
 import ENGINE.GameEngine;
 import GUI.BoardDisplay;
+import MULTIPLAYER.Player;
 
 public class Main {
-    public ClientSideConnection csc;
-    private int playerID;
-    private int otherPlayer;
-
-    public void connectToServer(){
-        csc = new ClientSideConnection();
-    }
-
-    private class ClientSideConnection{
-
-    private Socket socket;
-    private DataInputStream dataIn;
-    private DataOutputStream dataOut;
-
-    public ClientSideConnection(){
-        try{
-            socket = new Socket("localhost", 27015);
-            dataIn = new DataInputStream(socket.getInputStream());
-            dataOut = new DataOutputStream(socket.getOutputStream());
-        }
-        catch(IOException ex){
-            System.out.println("IOException from CSC constructor");
-        }
-    }
-    }
+    
 
     public static void main(String[] args) {
-        Main m = new Main();
-        m.connectToServer();
-        if (args.length == 0) {
-            GameEngine game = new GameEngine(new Board());
-            game.board.printBoard();
-            boolean exit = false;
-            Scanner input = new Scanner(System.in);
-            String currMove = "";
+        
+            if (args.length == 0) {
+                boolean exit = false;
+                String currMove = "";
+                System.out.print("Local or Online (L/O): ");
+                Scanner input = new Scanner(System.in);
+                String choice = input.nextLine().toLowerCase();
 
-            while(exit == false){
-                System.out.print("Enter move: ");
-                currMove = input.nextLine().toLowerCase();
-                if(currMove.equals("quit")){
-                    return;
+                while(!choice.equals("o") && !choice.equals("l")){
+                    System.out.print("Invalid Input (L/O): ");
+                    choice = input.nextLine().toLowerCase();
                 }
-                else if(currMove.equals("restart")){
-                    game.restart();
+                if(choice.equals("o")){
+                    Player player = new Player();
+                    player.connectToServer();
+                    try{
+                        player.boardString = player.csc.dataIn.readUTF();
+                    }
+                    catch (IOException ex){
+                        System.out.println("IOException in board print.");
+                    }
+                    if(player.playerID != 1){
+                        Thread t = new Thread( new Runnable(){
+                            public void run(){
+                                player.updateTurn();
+                            }
+                        });
+                        t.start();
+                    }
+                    
+                    System.out.println(player.boardString);
+                    
+                    System.out.print("Enter move: ");
+                    while(exit == false){
+                        
+                        currMove = input.nextLine().toLowerCase();
+                        if(currMove.equals("quit")){
+                            return;
+                        }
+                        else{
+                            player.csc.sendMove(currMove);
+                            
+                        }
+                        Thread t2 = new Thread( new Runnable(){
+                            public void run(){
+                                player.updateTurn();
+                                player.updateTurn();
+                            }
+                        });
+                        t2.start();
                 }
-                else if(game.tryMove(currMove)){
-                    game.board.printBoard();
-                }
-                else{
-                    System.out.println("Try Again");
+            }
+            else if(choice.equals("l")){
+                GameEngine game = new GameEngine(new Board());
+                game.board.printBoard();
+                while(exit == false){
+                    System.out.print("Enter move: ");
+                    currMove = input.nextLine().toLowerCase();
+                    if(currMove.equals("quit")){
+                        return;
+                    }
+                    else if(currMove.equals("restart")){
+                        game.restart();
+                    }
+                    else if(game.tryMove(currMove)){
+                        game.board.printBoard();
+                    }
+                    else{
+                        System.out.println("Try Again");
+                    }
                 }
             }
         }
