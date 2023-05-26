@@ -31,9 +31,11 @@ public class Pawn extends Piece {
         // firstmove = false is temporary implementation, will need to be changed once Move list is working
         if(this.color == Color.BLACK){
             if(newY == this.posY-1 && newX == this.posX){
+                this.firstMove = false;
                 return collsionCheck(move);
             }
             else if(newY == this.posY-2 && this.firstMove){
+                this.firstMove = false;
                 return collsionCheck(move);
             }
             else{
@@ -43,9 +45,11 @@ public class Pawn extends Piece {
         }
         else if(this.color == Color.WHITE){
             if(newY == this.posY+1 && newX == this.posX){
+                this.firstMove = false;
                 return collsionCheck(move);
             }
             else if(newY == this.posY+2 && this.firstMove){
+                this.firstMove = false;
                 return collsionCheck(move);
             }
             else{
