@@ -6,7 +6,7 @@ import java.util.List;
 import BOARD_INFO.Board;
 import BOARD_INFO.TILES.*;
 import ENGINE.Move;
-import ENUM.Color;;
+import ENUM.Color;
 
 public class Pawn extends Piece {
 
@@ -16,7 +16,6 @@ public class Pawn extends Piece {
 
     private Tile pos;
     public int value = 1;
-    private boolean firstMove = true;
     
     @Override
     public boolean move(Move move) {
@@ -30,16 +29,14 @@ public class Pawn extends Piece {
         }
         // firstmove = false is temporary implementation, will need to be changed once Move list is working
         if(this.color == Color.BLACK){
-            if(newY == this.posY-1 && newX == this.posX && newTile.getClass() != FullTile.class){
-                this.firstMove = false;
+            if(newY == this.posY-1 && newX == this.posX && newTile.getColor() == Color.EMPTY){
                 return true;
             }
-            else if(newY == this.posY-2 && this.firstMove && newTile.getClass() != FullTile.class){
-                this.firstMove = false;
+            else if(newY == this.posY-2 && newX == this.posX && this.firstMove && newTile.getColor() == Color.EMPTY){
                 return true;
             }
-            else if(newY == this.posY-1 && (newX == this.posX-1 || newX == this.posX+1) && newTile.getClass() == FullTile.class && newTile.getPiece().getColor() != this.color){
-                return true;
+            else if(newY == this.posY-1 && (newX == this.posX-1 || newX == this.posX+1) && newTile.getColor() != Color.EMPTY && newTile.getColor() != this.color){
+                return collsionCheck(move);
             }
             else{
 //                System.out.println("Invalid Pawn Move");
@@ -47,16 +44,14 @@ public class Pawn extends Piece {
             }
         }
         else if(this.color == Color.WHITE){
-            if(newY == this.posY+1 && newX == this.posX && newTile.getClass() != FullTile.class){
-                this.firstMove = false;
+            if(newY == this.posY+1 && newX == this.posX && newTile.getColor() == Color.EMPTY){
                 return true;
             }
-            else if(newY == this.posY+2 && this.firstMove && newTile.getClass() != FullTile.class){
-                this.firstMove = false;
+            else if(newY == this.posY+2 && newX == this.posX && this.firstMove && newTile.getColor() == Color.EMPTY){
                 return true;
             }
-            else if(newY == this.posY+1 && (newX == this.posX-1 || newX == this.posX+1) && newTile.getClass() == FullTile.class && newTile.getPiece().getColor() != this.color){
-                return true;
+            else if(newY == this.posY+1 && (newX == this.posX-1 || newX == this.posX+1) && newTile.getColor() != Color.EMPTY && newTile.getColor() != this.color){
+                return collsionCheck(move);
             }
             else{
 //                System.out.println("Invalid Pawn Move");
@@ -72,39 +67,6 @@ public class Pawn extends Piece {
 
     public void enPassant() {
         
-    }
-
-    @Override
-    public List<Move> findMoves(Board b) {
-        List<Move> moves = new ArrayList<>();
-
-        // for(int i = 0; i < 8; i++) {
-        //     for(int j = 0; j < 8; j++){
-        //         if(move(i, j) && (b.getTile(i, j) instanceof EmptyTile)) {
-        //             moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //         }
-        //     }
-        // }
-        // //Pawn capture check, this may cause error for edge cases, yet to test
-        // if (this.color == Color.BLACK) {
-        //     if((posX != 7) && b.getTile(posX + 1, posY - 1).getColor() == Color.WHITE){
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-        //     }
-        //     if((posX != 0) && b.getTile(posX - 1, posY - 1).getColor() == Color.WHITE){
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-        //     }
-        // }
-
-        // else {
-        //     if((posX != 7) && b.getTile(posX + 1, posY + 1).getColor() == Color.WHITE){
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-        //     }
-        //     if((posX != 0) && b.getTile(posX - 1, posY + 1).getColor() == Color.WHITE){
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(posX + 1, posY - 1)));
-        //     }
-        // }
-        return moves;
-
     }
 
 }

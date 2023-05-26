@@ -27,15 +27,15 @@ public class Move {
         return newPos;
     }
     
-    public void makeMove(Move m) {
-        if ((prevPos.getPiece() instanceof Pawn) && Math.abs(newPos.getCoordY() - prevPos.getCoordY()) == 2) {
-            Pawn curr = (Pawn) prevPos.getPiece();
-            curr.doublePawn();
-        }
+    // public void makeMove(Move m) {
+    //     if ((prevPos.getPiece() instanceof Pawn) && Math.abs(newPos.getCoordY() - prevPos.getCoordY()) == 2) {
+    //         Pawn curr = (Pawn) prevPos.getPiece();
+    //         curr.doublePawn();
+    //     }
 
-        Piece toMove = prevPos.getPiece();
-        // NOT DONE
+    //     Piece toMove = prevPos.getPiece();
+    //     // NOT DONE
 
-    }
+    // }
 
 }

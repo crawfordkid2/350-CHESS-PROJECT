@@ -33,49 +33,9 @@ public class Bishop extends Piece {
             return collsionCheck(move);
         }
         else{
-            System.out.print("Invalid bishop move.");
+            //System.out.print("Invalid bishop move.");
             return false;
         }
 
-    }
-
-    @Override
-    public List<Move> findMoves(Board b) {
-
-        List<Move> moves = new ArrayList<>();
-        
-        // //Up/Right
-        // for(int i = this.posX + 1, j = this.posY + 1; i < 8 && j < 8; i++, j++) {
-        //     if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //     }
-        //     else {break;}
-        // }
-
-        // //Up/Left
-        // for(int i = this.posX - 1, j = this.posY + 1; i >= 0 && j < 8; i--, j++) {
-        //     if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //     }
-        //     else {break;}
-        // }
-
-        // //Down/Right
-        // for(int i = this.posX + 1, j = this.posY - 1; i < 8 && j >= 0; i++, j--) {
-        //     if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //     }
-        //     else {break;}
-        // }
-
-        // //Down/Left
-        // for(int i = this.posX - 1, j = this.posY - 1; i >= 0 && j >= 0; i--, j--) {
-        //     if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //         moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //     }
-        //     else {break;}
-        // }
-        
-        return moves;
     }
 }

@@ -36,30 +36,8 @@ public class King extends Piece {
             return collsionCheck(move);
         }
         else{
-            System.out.println("Invalid King Move.");
+            //System.out.println("Invalid King Move.");
             return false;
         }
-    }
-
-    //DOES NOT CURRENTLY CHECK IF MOVE PUTS KING IN A CHECK
-    @Override
-    public List<Move> findMoves(Board b) {
-
-        List<Move> moves = new ArrayList<>();
-
-        // if (this.canCastle = true) {
-        //     //check if rank is clear between rook, to implement, add move if so
-        // }
-
-        // for(int i = 0; i < 8; i++) {
-        //     for(int j = 0; j < 8; j++){
-        //         if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //             moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //         }
-        //     }
-        // }
-        return moves;
-
-        
     }
 }
