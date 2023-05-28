@@ -156,10 +156,11 @@ public class BoardDisplay {
                             move += (char)(destinationTile.getCoordX() + 97);
                             move += destinationTile.getCoordY() + 1;
                             ChessEngine.tryMove(move);
+                            sourceTile = null;
+                            destinationTile = null;
+                            humanMovedPiece = null;
                         }
-                        sourceTile = null;
-                        destinationTile = null;
-                        humanMovedPiece = null;
+
                     }
                     SwingUtilities.invokeLater(new Runnable() {
                         @Override
