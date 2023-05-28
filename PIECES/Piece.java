@@ -2,6 +2,8 @@ package PIECES;
 
 import ENGINE.Move;
 import ENUM.Color;
+
+import java.util.ArrayList;
 import java.util.List;
 
 import BOARD_INFO.Board;
@@ -13,6 +15,7 @@ public abstract class Piece {
     protected int posX;
     protected int posY;
     protected int value; 
+    public boolean firstMove = true;
     protected Board board;
 
     public Piece(int posX, int posY, final Color color, Board board) {
@@ -26,7 +29,26 @@ public abstract class Piece {
         return this.color;
     }
 
-    public abstract List<Move> findMoves(Board b);
+    public List<Move> findMoves()
+    {
+        Tile fromTile = this.board.getTile(this.posX, this.posY);
+        Tile toTile;
+        List<Move> validMoves = new ArrayList<Move>();
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                toTile = this.board.getTile(i, j);
+                Move testMove = new Move(fromTile, toTile);
+                
+                if(toTile.getColor() != this.getColor()){
+                    if(this.move(testMove)){
+                        validMoves.add(testMove);
+                    }
+                }
+            }
+        }
+
+        return validMoves;
+    }
 
     public abstract boolean move(Move move);
 

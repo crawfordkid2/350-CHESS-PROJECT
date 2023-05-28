@@ -34,23 +34,8 @@ public class Knight extends Piece {
             return true;
         }
         else{
-            System.out.println("Invalid Knight Move.");
+            //System.out.println("Invalid Knight Move.");
             return false;
         }
-    }
-
-    @Override
-    public List<Move> findMoves(Board b) {
-
-        List<Move> moves = new ArrayList<>();
-
-        // for(int i = 0; i < 8; i++) {
-        //     for(int j = 0; j < 8; j++){
-        //         if(move(i, j) && (b.getTile(i, j).getColor() != this.color)) {
-        //             moves.add(new Move(b.getTile(this.posX, this.posY), b.getTile(i, j)));
-        //         }
-        //     }
-        // }
-        return moves;
     }
 }

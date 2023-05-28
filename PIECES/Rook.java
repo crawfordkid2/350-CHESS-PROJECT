@@ -32,17 +32,8 @@ public class Rook extends Piece {
             return collsionCheck(move);
         }
         else{
-            System.out.println("Invalid Rook Move.");
+            //System.out.println("Invalid Rook Move.");
             return false;
         }
-    }
-
-    @Override
-    public List<Move> findMoves(Board b) {
-        
-        List<Move> moves = new ArrayList<>();
-
-        // TODO Auto-generated method stub
-        return moves;
     }
 }

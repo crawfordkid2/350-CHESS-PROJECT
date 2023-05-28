@@ -7,6 +7,9 @@ import BOARD_INFO.TILES.Tile;
 import ENUM.Color;
 import PIECES.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GameEngine {
     public Board board;
     public int turn;
@@ -17,7 +20,11 @@ public class GameEngine {
     }
 
     public boolean tryMove(String moveString){
-        if(moveString.length() != 4){
+        if(moveString.length() == 2){
+            checkValidMoves(moveString.charAt(0)-97, moveString.charAt(1)-49);
+            return false;
+        }
+        else if(moveString.length() != 4){
             System.out.println("Enter a 4 character input xyxy");
             return false;
         }
@@ -36,12 +43,23 @@ public class GameEngine {
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
                 piece.setPos(xTo, yTo);
+                piece.firstMove = false;
                 this.turn++;
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void checkValidMoves(int fromX, int fromY){
+        Piece piece = this.board.getTile(fromX, fromY).getPiece();
+        if(piece != null){
+            List<Move> validMoves = piece.findMoves();
+            for (Move move : validMoves) {
+                System.out.println(move.getNew().getCoordX() + ", " + move.getNew().getCoordY());
+            }
+        }
     }
 
     public void restart(){

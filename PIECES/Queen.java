@@ -33,17 +33,8 @@ public class Queen extends Piece {
             return collsionCheck(move);
         }
         else{
-            System.out.println("Invalid Queen Move.");
+            //System.out.println("Invalid Queen Move.");
             return false;
         }
-    }
-
-    @Override
-    public List<Move> findMoves(Board b) {
-        
-        List<Move> moves = new ArrayList<>();
-
-        // TODO Auto-generated method stub
-        return moves;
     }
 }
