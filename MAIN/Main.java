@@ -13,7 +13,7 @@ public class Main {
     
 
     public static void main(String[] args) {
-        
+
             if (args.length == 0) {
                 boolean exit = false;
                 String currMove = "";
@@ -42,19 +42,19 @@ public class Main {
                         });
                         t.start();
                     }
-                    
+
                     System.out.println(player.boardString);
-                    
+
                     System.out.print("Enter move: ");
                     while(exit == false){
-                        
+
                         currMove = input.nextLine().toLowerCase();
                         if(currMove.equals("quit")){
                             return;
                         }
                         else{
                             player.csc.sendMove(currMove);
-                            
+
                         }
                         Thread t2 = new Thread( new Runnable(){
                             public void run(){

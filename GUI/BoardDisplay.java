@@ -1,18 +1,24 @@
 package GUI;
 
 import BOARD_INFO.Board;
+import BOARD_INFO.TILES.Tile;
 import ENGINE.GameEngine;
+import PIECES.Piece;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import static javax.swing.SwingUtilities.isLeftMouseButton;
+import static javax.swing.SwingUtilities.isRightMouseButton;
 
 public class BoardDisplay {
 
@@ -23,6 +29,10 @@ public class BoardDisplay {
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10,10);
     private final static Dimension BOARD_PANEL_DIMENSION = new Dimension(400,350);
     private final static Dimension OUTER_FRAME_DIMENSION = new Dimension(600,600);
+    private Tile sourceTile;
+    private Tile destinationTile;
+
+    private Piece humanMovedPiece;
     private final GameEngine ChessEngine;
     private static String pieceIconPath = "icons/pieces/";
 
@@ -89,6 +99,16 @@ public class BoardDisplay {
             setPreferredSize(BOARD_PANEL_DIMENSION);
             validate();
         }
+
+        public void drawBoard(final GameEngine game) {
+            removeAll();
+            for (final TilePanel tilePanel : boardTiles) {
+                tilePanel.drawTile(game);
+                add(tilePanel);
+                validate();
+                repaint();
+            }
+        }
     }
 
     private class TilePanel extends JPanel {
@@ -110,7 +130,73 @@ public class BoardDisplay {
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
             assignPieceIcon(ChessEngine);
+
+            addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(final MouseEvent e) {
+                    if (isRightMouseButton(e)) {
+                        sourceTile = null;
+                        destinationTile = null;
+                        humanMovedPiece = null;
+                    }
+                    else if (isLeftMouseButton(e)) {
+                        if (sourceTile == null) {
+                            sourceTile = ChessEngine.board.getTile(xCord, yCord);
+                            humanMovedPiece = sourceTile.getPiece();
+                            if (humanMovedPiece == null) {
+                                sourceTile = null;
+                            }
+                        }
+                        else {
+                            destinationTile = ChessEngine.board.getTile(xCord, yCord);
+                            String move = "";
+                            // xcoords are input as chars for the backend. Conversion handled here.
+                            move += (char) (sourceTile.getCoordX() + 97);
+                            move += sourceTile.getCoordY() + 1;
+                            move += (char)(destinationTile.getCoordX() + 97);
+                            move += destinationTile.getCoordY() + 1;
+                            ChessEngine.tryMove(move);
+                        }
+                        sourceTile = null;
+                        destinationTile = null;
+                        humanMovedPiece = null;
+                    }
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            boardPanel.drawBoard(ChessEngine);
+                        }
+                    });
+                }
+
+                @Override
+                public void mousePressed(final MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseReleased(final MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseEntered(final MouseEvent e) {
+
+                }
+
+                @Override
+                public void mouseExited(final MouseEvent e) {
+
+                }
+            });
             validate();
+        }
+
+        public void drawTile(final GameEngine game) {
+            assignTileColor();
+            assignPieceIcon(game);
+            validate();
+            repaint();
         }
 
         private void assignPieceIcon(final GameEngine game) {

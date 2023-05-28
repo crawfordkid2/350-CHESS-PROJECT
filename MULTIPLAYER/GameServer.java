@@ -11,7 +11,7 @@ public class GameServer{
     private int numPlayers;
     private ServerSideConnection player1;
     private ServerSideConnection player2;
-    
+
     private GameEngine game;
 
     public GameServer(){
@@ -75,7 +75,7 @@ public class GameServer{
                 dataOut.writeInt(playerID);
                 dataOut.writeUTF(game.board.toString());
                 dataOut.flush();
-                
+
                 while(true){
                     if(playerID == 1){
                         currMove = dataIn.readUTF();
@@ -98,11 +98,12 @@ public class GameServer{
             }
         }
 
+        //TODO
         public String checkMove(String currMove){
             if(currMove.equals("quit")){
                 return "";
             }
-            else if(game.tryMove(currMove)){              
+            else if(game.tryMove(currMove)){
                 this.turns++;
                 return game.board.toString();
             }
