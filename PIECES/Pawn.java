@@ -18,7 +18,7 @@ public class Pawn extends Piece {
     public int value = 1;
     
     @Override
-    public boolean move(Move move, Board board) {
+    public boolean move(Move move) {
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
         Tile newTile = move.getNew();
@@ -27,7 +27,7 @@ public class Pawn extends Piece {
             System.out.print("Invalid Input, Out of Bounds");
             return false;
         }
-        
+        // firstmove = false is temporary implementation, will need to be changed once Move list is working
         if(this.color == Color.BLACK){
             if(newY == this.posY-1 && newX == this.posX && newTile.getColor() == Color.EMPTY){
                 return true;

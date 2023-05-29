@@ -18,7 +18,7 @@ public class Queen extends Piece {
     public int value = 10;
     
     @Override
-    public boolean move(Move move, Board board) {
+    public boolean move(Move move) {
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
 

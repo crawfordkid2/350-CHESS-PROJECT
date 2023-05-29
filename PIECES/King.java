@@ -20,7 +20,7 @@ public class King extends Piece {
     public boolean canCastle = true;
     
     @Override
-    public boolean move(Move move, Board board) {
+    public boolean move(Move move) {
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
 
@@ -35,20 +35,9 @@ public class King extends Piece {
         if(diffX == 1 && diffY == 0 ||diffX == 0 && diffY == 1 ||diffX == 1 && diffY == 1){
             return collsionCheck(move);
         }
-
-        else if (firstMove) {
-            if ((move.getNew()).getCoordY() == 0 && color == Color.WHITE || (move.getNew()).getCoordY() == 7 && color == Color.BLACK) {
-                switch ((move.getNew()).getCoordX()) {
-                    case 2:
-                        return move.canCastleLeft(move.getPrev(), board);
-                    case 6:
-                        return move.canCastleRight(move.getPrev(), board);
-                    default:
-                        return false;
-                }
-            }
+        else{
+            //System.out.println("Invalid King Move.");
+            return false;
         }
-        
-        return false;
     }
 }

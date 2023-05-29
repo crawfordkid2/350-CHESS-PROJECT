@@ -24,14 +24,14 @@ public class Board {
 
     public Tile[][] initialize() {
         Tile[][] builtBoard = new Tile[8][8];
-        this.whiteKing = new King(4, 0, Color.WHITE, this);
-        this.blackKing = new King(4, 7, Color.BLACK, this);
+        this.whiteKing = new King(3, 0, Color.WHITE, this);
+        this.blackKing = new King(3, 7, Color.BLACK, this);
 
         builtBoard[0][7] = new FullTile(0, 7, new Rook(0, 7, Color.BLACK, this));
         builtBoard[1][7] = new FullTile(1, 7, new Knight(1, 7, Color.BLACK, this));
         builtBoard[2][7] = new FullTile(2, 7, new Bishop(2, 7, Color.BLACK, this));
-        builtBoard[3][7] = new FullTile(3, 7, new Queen(3, 7, Color.BLACK, this));
-        builtBoard[4][7] = new FullTile(4, 7, blackKing);
+        builtBoard[3][7] = new FullTile(3, 7, blackKing);
+        builtBoard[4][7] = new FullTile(4, 7, new Queen(4, 7, Color.BLACK, this));
         builtBoard[5][7] = new FullTile(5, 7, new Bishop(5, 7, Color.BLACK, this));
         builtBoard[6][7] = new FullTile(6, 7, new Knight(6, 7, Color.BLACK, this));
         builtBoard[7][7] = new FullTile(7, 7, new Rook(7, 7, Color.BLACK, this));
@@ -44,8 +44,8 @@ public class Board {
         builtBoard[0][0] = new FullTile(0, 0 , new Rook(0, 0, Color.WHITE, this));
         builtBoard[1][0] = new FullTile(1, 0, new Knight(1, 0, Color.WHITE, this));
         builtBoard[2][0] = new FullTile(2, 0, new Bishop(2, 0, Color.WHITE, this));
-        builtBoard[3][0] = new FullTile(3, 0, new Queen(3, 0, Color.WHITE, this));
-        builtBoard[4][0] = new FullTile(4, 0, whiteKing);
+        builtBoard[3][0] = new FullTile(3, 0, whiteKing);
+        builtBoard[4][0] = new FullTile(4, 0, new Queen(4, 0, Color.WHITE, this));
         builtBoard[5][0] = new FullTile(5, 0, new Bishop(5, 0, Color.WHITE, this));
         builtBoard[6][0] = new FullTile(6, 0, new Knight(6, 0, Color.WHITE, this));
         builtBoard[7][0] = new FullTile(7, 0, new Rook(7, 0, Color.WHITE, this));
