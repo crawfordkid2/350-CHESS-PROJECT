@@ -18,7 +18,7 @@ public class Knight extends Piece {
     public int value = 5;
     
     @Override
-    public boolean move(Move move) {
+    public boolean move(Move move, Board board) {
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
 

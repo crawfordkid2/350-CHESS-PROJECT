@@ -19,7 +19,7 @@ public class Rook extends Piece {
     public boolean canCastle = true;
 
     @Override
-    public boolean move(Move move) {
+    public boolean move(Move move, Board board) {
         int newX = move.getNew().getCoordX();
         int newY = move.getNew().getCoordY();
         

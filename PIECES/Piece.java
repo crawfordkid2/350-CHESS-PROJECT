@@ -25,11 +25,20 @@ public abstract class Piece {
         this.board = board;
     }
 
+    // For Pawn promotions, can set firstmove to false
+    public Piece(int posX, int posY, final Color color, Board board, boolean firstMove) {
+        this.posX = posX;
+        this.posY = posY;
+        this.color = color;
+        this.board = board;
+        this.firstMove = firstMove;
+    }
+
     public Color getColor() {
         return this.color;
     }
 
-    public List<Move> findMoves()
+    public List<Move> findMoves(Board board)
     {
         Tile fromTile = this.board.getTile(this.posX, this.posY);
         Tile toTile;
@@ -40,7 +49,7 @@ public abstract class Piece {
                 Move testMove = new Move(fromTile, toTile);
                 
                 if(toTile.getColor() != this.getColor()){
-                    if(this.move(testMove)){
+                    if(this.move(testMove, board)){
                         validMoves.add(testMove);
                     }
                 }
@@ -50,7 +59,7 @@ public abstract class Piece {
         return validMoves;
     }
 
-    public abstract boolean move(Move move);
+    public abstract boolean move(Move move, Board board);
 
     public void capture(){}
 
