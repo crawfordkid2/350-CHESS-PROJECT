@@ -14,6 +14,10 @@ public class Queen extends Piece {
         super(posX, posY, color, board);
     }
 
+    public Queen(int posX, int posY, Color color, Board board, boolean firstMove) {
+        super(posX, posY, color, board, firstMove);
+    }
+
     private Tile pos;
     public int value = 10;
     

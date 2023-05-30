@@ -16,6 +16,8 @@ import java.util.List;
 public class GameEngine {
     public Board board;
     public int turn;
+    public Color checkStatus = Color.EMPTY;
+    private Piece trash = null;
 
 
     private static final HashMap<Character, Integer> files;
@@ -79,13 +81,13 @@ public class GameEngine {
         Tile toTile = this.board.getTile(xTo, yTo);
 
         //Checks if piece exists and if there is either an empty tile or an opponent on the new tile. 
-        if(piece != null && (toTile.getPiece() == null || toTile.getPiece().getColor() != piece.getColor()) && ((piece.getColor() == Color.BLACK && this.turn % 2 == 1) || (piece.getColor() == Color.WHITE && this.turn % 2 == 0))){
+        if(piece != null && (toTile.getPiece() == null || toTile.getColor() != piece.getColor()) && ((piece.getColor() == Color.BLACK && this.turn % 2 == 1) || (piece.getColor() == Color.WHITE && this.turn % 2 == 0))){
             Move curr = new Move(fromTile, toTile);
             if(piece.move(curr, board)){
+                trash = toTile.getPiece();
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
-                piece.setPos(xTo, yTo);
-                piece.firstMove = false;
+                
 
                 if (piece instanceof King) {
                     curr.castleCheck(this.board);
@@ -95,12 +97,48 @@ public class GameEngine {
                     curr.isPromotion(this.board);
                 }
 
+                if (!checkHandler(fromTile, toTile, piece, turn)) {
+                    System.out.println("Invalid, check \n");
+                    return false;
+                }
+                
+                // Need to add a checkmate check
+                piece.setPos(xTo, yTo);
+                piece.firstMove = false;
                 this.turn++;
                 return true;
             }
         }
 
         return false;
+    }
+
+    public boolean checkHandler(Tile from, Tile to, Piece piece, int turn) {
+        Move test = new Move(null, null);
+        Color curCheck = test.isCheck(this.board, turn);
+        if (curCheck != Color.EMPTY && checkStatus == curCheck) {
+            replacePiece(from, to, trash, piece);
+            return false;
+        }
+        else if ((this.turn % 2 == 1 && curCheck == Color.BLACK) || (this.turn % 2 == 0 && curCheck == Color.WHITE)) {
+            replacePiece(from, to, trash, piece);
+            curCheck = Color.EMPTY;
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    private void replacePiece(Tile from, Tile to, Piece trash, Piece king) {
+        if (trash != null) {
+            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), king));
+            this.board.setTile(to.getCoordX(), to.getCoordY(), new FullTile(to.getCoordX(), to.getCoordY(), trash));
+        }
+        else {
+            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), king));
+            this.board.setTile(to.getCoordX(), to.getCoordY(), new EmptyTile(to.getCoordX(), to.getCoordY()));
+        }
     }
 
     public void checkValidMoves(int fromX, int fromY){
