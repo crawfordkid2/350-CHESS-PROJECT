@@ -130,23 +130,18 @@ public class Move {
             switch((this.prevPos.getPiece()).getColor()) {
                 case WHITE:
                     if(this.newPos.getCoordY() == 7) {
-                        promote(board);
+                        board.setTile(this.newPos.getCoordX(), this.newPos.getCoordY(), new FullTile(this.newPos.getCoordX(), this.newPos.getCoordY(), new Queen(this.newPos.getCoordX(), this.newPos.getCoordY(), Color.WHITE, board, false)));
                     };
                     break;
                 case BLACK:
                     if(this.newPos.getCoordY() == 0) {
-                        promote(board);
+                        board.setTile(this.newPos.getCoordX(), this.newPos.getCoordY(), new FullTile(this.newPos.getCoordX(), this.newPos.getCoordY(), new Queen(this.newPos.getCoordX(), this.newPos.getCoordY(), Color.BLACK, board, false)));
                     };
                     break;
                 case EMPTY:
                     break;
             }
         }
-    }
-
-    public void promote(Board board) {
-        // Do promotion prompt and replace piece with requested piece
-        System.out.println("PROMOTE ME PLEASE \n");
     }
 
     public Tile getPrev() {
