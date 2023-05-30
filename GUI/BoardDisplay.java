@@ -208,7 +208,7 @@ public class BoardDisplay {
                     // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.gif
                     final BufferedImage image = ImageIO.read(new File(pieceIconPath +
                             game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
-                            game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".gif"));
+                            game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".png"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
