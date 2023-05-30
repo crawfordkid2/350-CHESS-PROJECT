@@ -144,6 +144,54 @@ public class Move {
         }
     }
 
+    public Color isCheck(Board board, int turn) {
+        
+        Color newCheck = Color.EMPTY;
+        Tile king = null;
+
+            king = findKing(board, Color.BLACK);
+            if (findAttacker(board, Color.WHITE, king)) {
+                newCheck = Color.BLACK;
+            }
+        
+            king = findKing(board, Color.WHITE);
+            if (findAttacker(board, Color.BLACK, king)) {
+                newCheck = Color.WHITE;
+            }
+        
+        return newCheck;
+    }
+
+    private Tile findKing(Board board, Color color) {
+        
+        Tile king = null;
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++) {
+                Tile curTile = board.getTile(i, j); 
+                if (curTile.getPiece() instanceof King && curTile.getColor() == color) {
+                    king = curTile;
+                    break;
+                }
+            }
+        }
+
+        return king;
+    }
+
+    private boolean findAttacker(Board board, Color color, Tile king) {
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++) {
+                Tile curTile = board.getTile(i, j); 
+                if (curTile.getColor() == color && (curTile.getPiece()).move(new Move(curTile, king), board)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public Tile getPrev() {
         return prevPos;
     }
