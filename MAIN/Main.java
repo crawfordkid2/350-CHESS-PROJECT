@@ -26,8 +26,10 @@ public class Main {
                     choice = input.nextLine().toLowerCase();
                 }
                 if(choice.equals("o")){
+                    System.out.println("Server Address(Default - localhost): ");
+                    String address = input.nextLine();
                     Player player = new Player();
-                    player.connectToServer();
+                    player.connectToServer(address);
                     try{
                         player.boardString = player.csc.dataIn.readUTF();
                     }

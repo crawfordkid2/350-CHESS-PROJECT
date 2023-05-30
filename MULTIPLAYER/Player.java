@@ -9,8 +9,8 @@ public class Player {
     public String boardString;
     public int turns;
 
-    public void connectToServer(){
-        csc = new ClientSideConnection();
+    public void connectToServer(String address){
+        csc = new ClientSideConnection(address);
     }
 
     public void updateTurn(){
@@ -27,9 +27,12 @@ public class Player {
         public DataInputStream dataIn;
         public DataOutputStream dataOut;
 
-        public ClientSideConnection(){
+        public ClientSideConnection(String address){
+            if(address.equals("") || address == null){
+                address = "localhost";
+            }
             try{
-                socket = new Socket("localhost", 27015);
+                socket = new Socket(address, 27015);
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 playerID = dataIn.readInt();
