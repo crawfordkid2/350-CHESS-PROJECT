@@ -26,11 +26,14 @@ public class Main {
                     choice = input.nextLine().toLowerCase();
                 }
                 if(choice.equals("o")){
+                    System.out.println("Server Address(Default - localhost): ");
+                    String address = input.nextLine();
                     GameEngine game = new GameEngine(new Board());
                     String lastMove = "";
                     Player player = new Player(game);
-                    player.connectToServer();
+                    player.connectToServer(address);
                     BoardDisplay gui = new BoardDisplay(game);
+
                     try{
                         player.boardString = player.csc.dataIn.readUTF();
                     }
