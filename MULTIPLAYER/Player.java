@@ -3,19 +3,27 @@ package MULTIPLAYER;
 import java.io.*;
 import java.net.*;
 
+import ENGINE.GameEngine;
+
 public class Player {
     public ClientSideConnection csc;
     public int playerID;
     public String boardString;
     public int turns;
+    public GameEngine game;
 
-    public void connectToServer(){
-        csc = new ClientSideConnection();
+    public Player(GameEngine game){
+        this.game = game;
+    }
+
+    public void connectToServer(String address){
+        csc = new ClientSideConnection(address);
     }
 
     public void updateTurn(){
         String update = csc.receiveMove();
-        System.out.println(update);
+        game.tryMove(update);
+        game.board.printBoard();
         System.out.println("Enter move: ");
     }
 
@@ -27,9 +35,12 @@ public class Player {
         public DataInputStream dataIn;
         public DataOutputStream dataOut;
 
-        public ClientSideConnection(){
+        public ClientSideConnection(String address){
+            if(address.equals("") || address == null){
+                address = "localhost";
+            }
             try{
-                socket = new Socket("localhost", 27015);
+                socket = new Socket(address, 27015);
                 dataIn = new DataInputStream(socket.getInputStream());
                 dataOut = new DataOutputStream(socket.getOutputStream());
                 playerID = dataIn.readInt();
