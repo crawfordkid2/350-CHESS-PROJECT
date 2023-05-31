@@ -1,7 +1,6 @@
 package MAIN;
 
 import java.io.*;
-import java.net.*;
 import java.util.Scanner;
 
 import BOARD_INFO.Board;
@@ -20,14 +19,18 @@ public class Main {
                 System.out.print("Local or Online (L/O): ");
                 Scanner input = new Scanner(System.in);
                 String choice = input.nextLine().toLowerCase();
+                int turn = 0;
 
                 while(!choice.equals("o") && !choice.equals("l")){
                     System.out.print("Invalid Input (L/O): ");
                     choice = input.nextLine().toLowerCase();
                 }
                 if(choice.equals("o")){
-                    Player player = new Player();
+                    GameEngine game = new GameEngine(new Board());
+                    String lastMove = "";
+                    Player player = new Player(game);
                     player.connectToServer();
+                    BoardDisplay gui = new BoardDisplay(game);
                     try{
                         player.boardString = player.csc.dataIn.readUTF();
                     }
@@ -44,18 +47,23 @@ public class Main {
                     }
 
                     System.out.println(player.boardString);
-
+                    currMove = "";
                     System.out.print("Enter move: ");
                     while(exit == false){
-
-                        currMove = input.nextLine().toLowerCase();
-                        if(currMove.equals("quit")){
-                            return;
+                        
+                        currMove = "";
+                        gui.setUpdate(currMove);
+                        
+                        while(currMove.equals("")){
+                            currMove = gui.getUpdate();
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                            }
                         }
-                        else{
-                            player.csc.sendMove(currMove);
-
-                        }
+                        System.out.println(currMove);
+                        player.csc.sendMove(currMove);
                         Thread t2 = new Thread( new Runnable(){
                             public void run(){
                                 player.updateTurn();
@@ -67,6 +75,8 @@ public class Main {
             }
             else if(choice.equals("l")){
                 GameEngine game = new GameEngine(new Board());
+                new BoardDisplay(game);
+                
                 game.board.printBoard();
                 while(exit == false){
                     System.out.print("Enter move: ");

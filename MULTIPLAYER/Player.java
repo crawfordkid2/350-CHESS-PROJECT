@@ -3,11 +3,18 @@ package MULTIPLAYER;
 import java.io.*;
 import java.net.*;
 
+import ENGINE.GameEngine;
+
 public class Player {
     public ClientSideConnection csc;
     public int playerID;
     public String boardString;
     public int turns;
+    public GameEngine game;
+
+    public Player(GameEngine game){
+        this.game = game;
+    }
 
     public void connectToServer(){
         csc = new ClientSideConnection();
@@ -15,7 +22,8 @@ public class Player {
 
     public void updateTurn(){
         String update = csc.receiveMove();
-        System.out.println(update);
+        game.tryMove(update);
+        game.board.printBoard();
         System.out.println("Enter move: ");
     }
 

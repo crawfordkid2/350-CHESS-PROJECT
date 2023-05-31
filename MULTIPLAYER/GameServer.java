@@ -105,7 +105,7 @@ public class GameServer{
             }
             else if(game.tryMove(currMove)){
                 this.turns++;
-                return game.board.toString();
+                return currMove;
             }
             else{
                 return "Try Again";

@@ -52,6 +52,17 @@ public class BoardDisplay {
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
     }
+    public BoardDisplay(GameEngine engine) {
+        this.gameFrame = new JFrame("Chess app");
+        this.gameFrame.setLayout(new BorderLayout());
+        final JMenuBar tableMenuBar = createTableMenuBar();
+        this.gameFrame.setJMenuBar(tableMenuBar);
+        this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
+        this.ChessEngine = engine;
+        this.boardPanel = new BoardPanel();
+        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
+        this.gameFrame.setVisible(true);
+    }
 
     // helper method to populate menu
     private JMenuBar createTableMenuBar() {
@@ -70,6 +81,14 @@ public class BoardDisplay {
         return fileMenu;
     }
 
+    public String getUpdate(){
+        return this.boardPanel.getUpdate();
+    }
+
+    public void setUpdate(String update){
+        this.boardPanel.setUpdate(update);
+    }
+
     /**
      * This class contains the logic for the chess board. Inside this class a list containing TilePanels
      * is created and displayed using a 8x8 GridLayout. Then each tile is looped through, creating a new TilePanel
@@ -77,6 +96,7 @@ public class BoardDisplay {
      */
     private class BoardPanel extends JPanel {
         final List<TilePanel> boardTiles;
+        private String update = "";
 
         BoardPanel() {
             super(new GridLayout(8,8));
@@ -99,6 +119,14 @@ public class BoardDisplay {
                 validate();
                 repaint();
             }
+        }
+        
+        public String getUpdate(){
+            return this.update;
+        }
+
+        public void setUpdate(String update){
+            this.update = update;
         }
     }
 
@@ -139,12 +167,14 @@ public class BoardDisplay {
                     // right mouse deselects the current piece by setting those globals to null
                     if (isRightMouseButton(e)) {
                         sourceTile = null;
+                        System.out.println("Right" + sourceTile);
                         destinationTile = null;
                     }
                     // left mouse button selects.
                     else if (isLeftMouseButton(e)) {
                         if (sourceTile == null) { // if this is user's first click, then that is a source tile
                             sourceTile = ChessEngine.board.getTile(xCord, yCord);
+                            System.out.println("Left 1" + sourceTile);
                         }
                         else { // user has already selected a source tile, so this is a destination tile
                             destinationTile = ChessEngine.board.getTile(xCord, yCord);
@@ -154,10 +184,13 @@ public class BoardDisplay {
                             move += sourceTile.getCoordY() + 1;
                             move += (char)(destinationTile.getCoordX() + 97);
                             move += destinationTile.getCoordY() + 1;
-                            ChessEngine.tryMove(move); // execute move
+                            if(ChessEngine.tryMove(move)){
+                                boardPanel.setUpdate(move);;
+                            } // execute move
                             // reset selections
                             sourceTile = null;
                             destinationTile = null;
+                            System.out.println("Left 2" + sourceTile);
                         }
 
                     }
