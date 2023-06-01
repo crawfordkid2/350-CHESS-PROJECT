@@ -35,6 +35,8 @@ public class BoardDisplay {
     private Tile destinationTile;
     private final GameEngine ChessEngine;
     private static String pieceIconPath = "icons/pieces/";
+    private boolean online;
+    private boolean turnToggle = true;
 
     /**
      * Creates a new JFrame that represents the chess board.
@@ -51,8 +53,9 @@ public class BoardDisplay {
         this.boardPanel = new BoardPanel();
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
+        this.online = false;
     }
-    public BoardDisplay(GameEngine engine) {
+    public BoardDisplay(GameEngine engine, boolean online) {
         this.gameFrame = new JFrame("Chess app");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -62,6 +65,7 @@ public class BoardDisplay {
         this.boardPanel = new BoardPanel();
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
+        this.online = online;
     }
 
     // helper method to populate menu
@@ -87,6 +91,10 @@ public class BoardDisplay {
 
     public void setUpdate(String update){
         this.boardPanel.setUpdate(update);
+    }
+
+    public void setTurnToggle(boolean toggle){
+        this.turnToggle = toggle;
     }
 
     /**
@@ -165,16 +173,16 @@ public class BoardDisplay {
                 @Override
                 public void mouseClicked(final MouseEvent e) {
                     // right mouse deselects the current piece by setting those globals to null
-                    if (isRightMouseButton(e)) {
+                    if (isRightMouseButton(e) && turnToggle) {
                         sourceTile = null;
-                        System.out.println("Right" + sourceTile);
+                        System.out.println("Deselect");
                         destinationTile = null;
                     }
                     // left mouse button selects.
-                    else if (isLeftMouseButton(e)) {
+                    else if (isLeftMouseButton(e) && turnToggle) {
                         if (sourceTile == null) { // if this is user's first click, then that is a source tile
                             sourceTile = ChessEngine.board.getTile(xCord, yCord);
-                            System.out.println("Left 1" + sourceTile);
+                            System.out.println("Left 1");
                         }
                         else { // user has already selected a source tile, so this is a destination tile
                             destinationTile = ChessEngine.board.getTile(xCord, yCord);
@@ -184,13 +192,13 @@ public class BoardDisplay {
                             move += sourceTile.getCoordY() + 1;
                             move += (char)(destinationTile.getCoordX() + 97);
                             move += destinationTile.getCoordY() + 1;
-                            if(ChessEngine.tryMove(move)){
+                            if(ChessEngine.tryMove(move) && online == true){
                                 boardPanel.setUpdate(move);;
                             } // execute move
                             // reset selections
                             sourceTile = null;
                             destinationTile = null;
-                            System.out.println("Left 2" + sourceTile);
+                            System.out.println("Left 2");
                         }
 
                     }

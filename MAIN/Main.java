@@ -32,7 +32,7 @@ public class Main {
                     String lastMove = "";
                     Player player = new Player(game);
                     player.connectToServer(address);
-                    BoardDisplay gui = new BoardDisplay(game);
+                    BoardDisplay gui = new BoardDisplay(game, true);
 
                     try{
                         player.boardString = player.csc.dataIn.readUTF();
@@ -52,11 +52,23 @@ public class Main {
                     System.out.println(player.boardString);
                     currMove = "";
                     System.out.print("Enter move: ");
+                    if(player.playerID == 2 ){
+                        gui.setTurnToggle(false);
+                    }
                     while(exit == false){
-                        
+                        while((game.turn % 2 == 0 && player.playerID == 2) || (game.turn % 2 == 1 && player.playerID == 1) )
+                        {
+                            try {
+                                Thread.sleep(100);
+                            } catch (InterruptedException ie) {
+                                Thread.currentThread().interrupt();
+                            }
+                        }
+
                         currMove = "";
                         gui.setUpdate(currMove);
                         
+                        gui.setTurnToggle(true);
                         while(currMove.equals("")){
                             currMove = gui.getUpdate();
                             try {
@@ -65,6 +77,7 @@ public class Main {
                                 Thread.currentThread().interrupt();
                             }
                         }
+                        
                         System.out.println(currMove);
                         player.csc.sendMove(currMove);
                         Thread t2 = new Thread( new Runnable(){
@@ -74,11 +87,12 @@ public class Main {
                             }
                         });
                         t2.start();
+                        gui.setTurnToggle(false);
                 }
             }
             else if(choice.equals("l")){
                 GameEngine game = new GameEngine(new Board());
-                new BoardDisplay(game);
+                new BoardDisplay(game, false);
                 
                 game.board.printBoard();
                 while(exit == false){
