@@ -156,6 +156,9 @@ public class BoardDisplay {
         }
 
         public void setUpdate(String update){
+            SwingUtilities.invokeLater(() -> {
+                boardPanel.drawBoard(ChessEngine);
+            });
             this.update = update;
         }
     }

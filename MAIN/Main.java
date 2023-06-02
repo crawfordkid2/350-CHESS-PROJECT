@@ -62,7 +62,7 @@ public class Main {
                                 Thread.currentThread().interrupt();
                             }
                         }
-
+                    
                         currMove = "";
                         gui.setUpdate(currMove);
                         
