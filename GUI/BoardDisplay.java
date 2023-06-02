@@ -7,12 +7,15 @@ import ENGINE.GameEngine;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static javax.swing.SwingUtilities.isLeftMouseButton;
@@ -37,6 +40,7 @@ public class BoardDisplay {
     private static String pieceIconPath = "icons/pieces/";
     private boolean online;
     private boolean turnToggle = true;
+    private int playerID;
 
     /**
      * Creates a new JFrame that represents the chess board.
@@ -55,7 +59,7 @@ public class BoardDisplay {
         this.gameFrame.setVisible(true);
         this.online = false;
     }
-    public BoardDisplay(GameEngine engine, boolean online) {
+    public BoardDisplay(GameEngine engine, boolean online, int playerID) {
         this.gameFrame = new JFrame("Chess app");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -66,13 +70,23 @@ public class BoardDisplay {
         this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
         this.gameFrame.setVisible(true);
         this.online = online;
+        this.playerID = playerID;
     }
 
     // helper method to populate menu
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
+        tableMenuBar.add(createPreferencesMenu());
         return tableMenuBar;
+    }
+
+    private JMenu createPreferencesMenu() {
+        final JMenu preferences = new JMenu("Preferences");
+        final JMenuItem flipBoardItem = new JMenuItem("Flip Board");
+        flipBoardItem.addActionListener(e -> boardPanel.flipBoardOrientation());
+        preferences.add(flipBoardItem);
+        return preferences;
     }
 
     // contains all menu options
@@ -114,6 +128,9 @@ public class BoardDisplay {
                 this.boardTiles.add(tilePanel);
                 add(tilePanel);
             }
+            if (playerID == 2) { // auto flip board for player 2
+                Collections.reverse(boardPanel.boardTiles);
+            }
             setPreferredSize(BOARD_PANEL_DIMENSION);
             validate();
         }
@@ -127,6 +144,11 @@ public class BoardDisplay {
                 validate();
                 repaint();
             }
+        }
+
+        public void flipBoardOrientation() {
+            Collections.reverse(boardPanel.boardTiles);
+            boardPanel.drawBoard(ChessEngine);
         }
         
         public String getUpdate(){
@@ -203,7 +225,9 @@ public class BoardDisplay {
 
                     }
                     // updates the board each time a move is input.
-                    SwingUtilities.invokeLater(() -> boardPanel.drawBoard(ChessEngine));
+                    SwingUtilities.invokeLater(() -> {
+                        boardPanel.drawBoard(ChessEngine);
+                    });
                 }
 
                 @Override

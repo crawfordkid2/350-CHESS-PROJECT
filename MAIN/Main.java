@@ -32,8 +32,7 @@ public class Main {
                     String lastMove = "";
                     Player player = new Player(game);
                     player.connectToServer(address);
-                    BoardDisplay gui = new BoardDisplay(game, true);
-
+                    BoardDisplay gui = new BoardDisplay(game, true, player.playerID);
                     try{
                         player.boardString = player.csc.dataIn.readUTF();
                     }
@@ -48,7 +47,6 @@ public class Main {
                         });
                         t.start();
                     }
-
                     System.out.println(player.boardString);
                     currMove = "";
                     System.out.print("Enter move: ");
@@ -92,7 +90,7 @@ public class Main {
             }
             else if(choice.equals("l")){
                 GameEngine game = new GameEngine(new Board());
-                new BoardDisplay(game, false);
+                new BoardDisplay(game, false, 0);
                 
                 game.board.printBoard();
                 while(exit == false){
