@@ -141,15 +141,18 @@ public class GameEngine {
         }
     }
 
-    public void checkValidMoves(int fromX, int fromY){
+    public List<Move> checkValidMoves(int fromX, int fromY){
         Piece piece = this.board.getTile(fromX, fromY).getPiece();
+        List<Move> realMoves = new ArrayList<Move>();
         if(piece != null){
             List<Move> validMoves = piece.findMoves(board);
             for (Move move : validMoves) {
+                realMoves.add(move);
                 System.out.println(move.getNew().getCoordX() + ", " + move.getNew().getCoordY());
-            }
         }
     }
+    return realMoves;
+}
 
     public void restart(){
         this.board = new Board();
