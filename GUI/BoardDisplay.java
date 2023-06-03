@@ -44,6 +44,8 @@ public class BoardDisplay {
     private boolean online;
     private boolean turnToggle = true;
     private int playerID;
+    private ENUM.Color winner = ENUM.Color.EMPTY;
+    private boolean gameDraw = false;
 
     /**
      * Creates a new JFrame that represents the chess board.
@@ -113,14 +115,7 @@ public class BoardDisplay {
     public void setTurnToggle(boolean toggle){
         this.turnToggle = toggle;
     }
-    public void endGame(boolean draw, ENUM.Color winner){
-        if(winner != ENUM.Color.EMPTY){
-            JOptionPane.showMessageDialog(null, "Checkmate: " + winner.name() + " wins.\n");
-        }
-        else if(draw){
-            JOptionPane.showMessageDialog(null, "Draw");
-        }
-    }
+    
 
     /**
      * This class contains the logic for the chess board. Inside this class a list containing TilePanels
@@ -155,6 +150,9 @@ public class BoardDisplay {
                 validate();
                 repaint();
             }
+            winner = ChessEngine.checkmateHandler();
+            gameDraw = ChessEngine.drawChecker();
+            endGame(gameDraw, winner);
         }
 
         public void flipBoardOrientation() {
@@ -185,6 +183,15 @@ public class BoardDisplay {
         public void unHighlight(){
             for (TilePanel tilePanel : boardTiles) {
                 tilePanel.isHighlighted = false;
+            }
+        }
+
+        public void endGame(boolean draw, ENUM.Color winner){
+            if(winner != ENUM.Color.EMPTY){
+                JOptionPane.showMessageDialog(null, "Checkmate: " + winner.name() + " wins.\n");
+            }
+            else if(draw){
+                JOptionPane.showMessageDialog(null, "Draw");
             }
         }
 
@@ -254,6 +261,8 @@ public class BoardDisplay {
                             move += destinationTile.getCoordY() + 1;
                             if(ChessEngine.tryMove(move) && online == true){
                                 boardPanel.setUpdate(move);;
+                                
+                                
                             } // execute move
                             // reset selections
                             sourceTile = null;

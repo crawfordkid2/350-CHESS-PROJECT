@@ -66,16 +66,6 @@ public class Main {
                         }
                     }
 
-                    winner = game.checkmateHandler();
-                    gameDraw = game.drawChecker();
-                    if(winner != Color.EMPTY || gameDraw){
-                        System.out.println("Checkmate: " + winner.name() + " wins.\n");
-                    }
-                    // }
-                    // else if (gameDraw){
-                    //     System.out.println("Draw: gameover");
-                    // }
-
                     currMove = "";
                     gui.setUpdate(currMove);
                     
