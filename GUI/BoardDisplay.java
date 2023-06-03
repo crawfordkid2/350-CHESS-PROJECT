@@ -113,6 +113,14 @@ public class BoardDisplay {
     public void setTurnToggle(boolean toggle){
         this.turnToggle = toggle;
     }
+    public void endGame(boolean draw, ENUM.Color winner){
+        if(winner != ENUM.Color.EMPTY){
+            JOptionPane.showMessageDialog(null, "Checkmate: " + winner.name() + " wins.\n");
+        }
+        else if(draw){
+            JOptionPane.showMessageDialog(null, "Draw");
+        }
+    }
 
     /**
      * This class contains the logic for the chess board. Inside this class a list containing TilePanels
@@ -171,7 +179,7 @@ public class BoardDisplay {
             for(Move move : validMoves){
                 int x = move.getNew().getCoordX();
                 int y = move.getNew().getCoordY();
-                this.boardTiles.get(Math.abs(63-(y * 8 + x))).isHighlighted = true;
+                this.boardTiles.get(Math.abs(((7-y) * 8 + x))).isHighlighted = true;
             }
         }
         public void unHighlight(){
@@ -179,6 +187,8 @@ public class BoardDisplay {
                 tilePanel.isHighlighted = false;
             }
         }
+
+        
     }
 
     /**
@@ -205,10 +215,10 @@ public class BoardDisplay {
             // ran into an issue here where we logically approached the engine with
             // coords 0,0 in the bottom left of the board, but Swing builds tiles top to bottom
             // there is no easy way to fix this in Swing, but inverting the coordinates works
-            int invertedID = Math.abs(tileId - 63);
-            // example math: tileID 37 should be at x:5, y:4
-            this.xCord = invertedID % 8;
-            this.yCord = invertedID / 8;
+
+
+            this.xCord = tileId % 8;
+            this.yCord = 7-(tileId / 8);
 
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
@@ -301,8 +311,8 @@ public class BoardDisplay {
                 try {
                     // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.gif
                     final BufferedImage image = ImageIO.read(new File(pieceIconPath +
-                            game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
-                            game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".png"));
+                    game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
+                    game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".png"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
