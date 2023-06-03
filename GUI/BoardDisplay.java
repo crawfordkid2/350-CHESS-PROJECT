@@ -2,7 +2,8 @@ package GUI;
 
 import BOARD_INFO.Board;
 import BOARD_INFO.TILES.Tile;
-import ENGINE.GameEngine;
+import ENGINE.*;
+import PIECES.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -29,6 +30,8 @@ public class BoardDisplay {
 
     private final Color lightTileColor = Color.decode("#FFFACD");
     private final Color darkTileColor = Color.decode("#593E1A");
+    private final Color lightHighlightColor = Color.decode("#00FA00");
+    private final Color darkHighlightColor = Color.decode("#003E00");
     private final JFrame gameFrame;
     private final BoardPanel boardPanel;
     private final static Dimension TILE_PANEL_DIMENSION = new Dimension(10,10);
@@ -149,6 +152,7 @@ public class BoardDisplay {
         public void flipBoardOrientation() {
             Collections.reverse(boardPanel.boardTiles);
             boardPanel.drawBoard(ChessEngine);
+            
         }
         
         public String getUpdate(){
@@ -156,7 +160,24 @@ public class BoardDisplay {
         }
 
         public void setUpdate(String update){
+            SwingUtilities.invokeLater(() -> {
+                boardPanel.drawBoard(ChessEngine);
+            });
             this.update = update;
+        }
+
+        public void showValidMoves(int fromX, int fromY){
+            List<Move> validMoves = ChessEngine.checkValidMoves(fromX, fromY);
+            for(Move move : validMoves){
+                int x = move.getNew().getCoordX();
+                int y = move.getNew().getCoordY();
+                this.boardTiles.get(Math.abs((y * 8 + x)-63)).isHighlighted = true;
+            }
+        }
+        public void unHighlight(){
+            for (TilePanel tilePanel : boardTiles) {
+                tilePanel.isHighlighted = false;
+            }
         }
     }
 
@@ -169,6 +190,7 @@ public class BoardDisplay {
         private final int tileId;
         private final int xCord;
         private final int yCord;
+        public boolean isHighlighted = false;
 
         /**
          * The constructor first sets each tile's ID to the ID passed in BoardPanel, then inverts that ID to properly
@@ -187,6 +209,7 @@ public class BoardDisplay {
             // example math: tileID 37 should be at x:5, y:4
             this.xCord = invertedID % 8;
             this.yCord = invertedID / 8;
+
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
             assignPieceIcon(ChessEngine);
@@ -199,11 +222,16 @@ public class BoardDisplay {
                         sourceTile = null;
                         System.out.println("Deselect");
                         destinationTile = null;
+                        boardPanel.unHighlight();
                     }
                     // left mouse button selects.
                     else if (isLeftMouseButton(e) && turnToggle) {
-                        if (sourceTile == null) { // if this is user's first click, then that is a source tile
+                        Tile currTile = ChessEngine.board.getTile(xCord, yCord);
+                        if (sourceTile == null && (currTile.getColor() == ENUM.Color.BLACK && ChessEngine.turn % 2 == 1) || (currTile.getColor() == ENUM.Color.WHITE && ChessEngine.turn % 2 == 0)) { // if this is user's first click, then that is a source tile
+                            boardPanel.unHighlight();
                             sourceTile = ChessEngine.board.getTile(xCord, yCord);
+                            isHighlighted = true;
+                            boardPanel.showValidMoves(xCord, yCord);
                             System.out.println("Left 1");
                         }
                         else { // user has already selected a source tile, so this is a destination tile
@@ -220,6 +248,7 @@ public class BoardDisplay {
                             // reset selections
                             sourceTile = null;
                             destinationTile = null;
+                            boardPanel.unHighlight();
                             System.out.println("Left 2");
                         }
 
@@ -285,6 +314,9 @@ public class BoardDisplay {
         private void assignTileColor() {
             boolean isLight = ((tileId + tileId / 8) % 2 == 0);
             setBackground(isLight ? lightTileColor : darkTileColor);
+            if(isHighlighted){
+                setBackground(isLight? lightHighlightColor : darkHighlightColor);
+            }
         }
     }
 }
