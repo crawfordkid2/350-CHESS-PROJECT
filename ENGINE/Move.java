@@ -13,15 +13,12 @@ public class Move {
     protected Tile newPos;
     protected boolean capture;
     protected boolean check;
+    private Piece trash;
     
 
     public Move(Tile fromPos, Tile toPos) {
         prevPos = fromPos;
         newPos = toPos;
-    }
-
-    public boolean moveChecker(Move move, Board board) {
-        return true;
     }
 
     // Affirms ability to castle, could rework to return move
@@ -124,7 +121,6 @@ public class Move {
         }
     }
 
-    // Too be added once we figure out how we want to prompt the promotion
     public void isPromotion(Board board) {
         if((this.prevPos.getPiece()) instanceof PIECES.Pawn) {
             switch((this.prevPos.getPiece()).getColor()) {
@@ -144,7 +140,7 @@ public class Move {
         }
     }
 
-    public Color isCheck(Board board, int turn) {
+    public static Color isCheck(Board board) {
         
         Color newCheck = Color.EMPTY;
         Tile king = null;
@@ -162,7 +158,30 @@ public class Move {
         return newCheck;
     }
 
-    private Tile findKing(Board board, Color color) {
+    public Color moveCheck(Board b) {
+        trash = newPos.getPiece();
+        Piece tmp = prevPos.getPiece();
+        b.setTile(newPos.getCoordX(), newPos.getCoordY(), new FullTile(newPos.getCoordX(), newPos.getCoordY(), prevPos.getPiece()));
+        b.setTile(prevPos.getCoordX(), prevPos.getCoordY(), new EmptyTile(prevPos.getCoordX(), prevPos.getCoordY()));
+        Color ifCheck = isCheck(b);
+        replacePiece(b, tmp);
+        return ifCheck;
+    }
+
+    private void replacePiece(Board b, Piece piece) {
+        if (trash != null) {
+            b.setTile(prevPos.getCoordX(), prevPos.getCoordY(), new FullTile(prevPos.getCoordX(), prevPos.getCoordY(), piece));
+            b.setTile(newPos.getCoordX(), newPos.getCoordY(), new FullTile(newPos.getCoordX(), newPos.getCoordY(), trash));
+            trash = null;
+        }
+        else {
+            b.setTile(prevPos.getCoordX(), prevPos.getCoordY(), new FullTile(prevPos.getCoordX(), prevPos.getCoordY(), piece));
+            b.setTile(newPos.getCoordX(), newPos.getCoordY(), new EmptyTile(newPos.getCoordX(), newPos.getCoordY()));
+        }
+    }
+
+
+    private static Tile findKing(Board board, Color color) {
         
         Tile king = null;
 
@@ -179,7 +198,7 @@ public class Move {
         return king;
     }
 
-    private boolean findAttacker(Board board, Color color, Tile king) {
+    private static boolean findAttacker(Board board, Color color, Tile king) {
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++) {
                 Tile curTile = board.getTile(i, j); 

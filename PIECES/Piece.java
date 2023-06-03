@@ -49,7 +49,7 @@ public abstract class Piece {
                 Move testMove = new Move(fromTile, toTile);
                 
                 if(toTile.getColor() != this.getColor()){
-                    if(this.move(testMove, board)){
+                    if(this.move(testMove, board) && testMove.moveCheck(board) != this.color){
                         validMoves.add(testMove);
                     }
                 }

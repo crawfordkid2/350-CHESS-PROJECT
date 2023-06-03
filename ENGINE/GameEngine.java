@@ -70,7 +70,7 @@ public class GameEngine {
             System.out.println("Invalid to rank");
             return false;
         }
-        
+        Move.isCheck(board);
         int xFrom = moveString.charAt(0)-97;
         int yFrom = moveString.charAt(1)-49;
         int xTo = moveString.charAt(2)-97;
@@ -87,7 +87,7 @@ public class GameEngine {
                 trash = toTile.getPiece();
                 this.board.setTile(xTo, yTo, new FullTile(xTo, yTo, piece));
                 this.board.setTile(xFrom, yFrom, new EmptyTile(xFrom, yFrom));
-                
+                piece.setPos(xTo, yTo);
 
                 if (piece instanceof King) {
                     curr.castleCheck(this.board);
@@ -97,13 +97,12 @@ public class GameEngine {
                     curr.isPromotion(this.board);
                 }
 
-                if (!checkHandler(fromTile, toTile, piece, turn)) {
+                if (checkHandler(fromTile, toTile, piece, turn, curr)) {
+                    piece.setPos(xFrom, yFrom);
                     System.out.println("Invalid, check \n");
                     return false;
                 }
                 
-                // Need to add a checkmate check
-                piece.setPos(xTo, yTo);
                 piece.firstMove = false;
                 this.turn++;
                 return true;
@@ -113,32 +112,109 @@ public class GameEngine {
         return false;
     }
 
-    public boolean checkHandler(Tile from, Tile to, Piece piece, int turn) {
-        Move test = new Move(null, null);
-        Color curCheck = test.isCheck(this.board, turn);
+    public boolean checkHandler(Tile from, Tile to, Piece piece, int turn, Move test) {
+        Color curCheck = Move.isCheck(this.board);
         if (curCheck != Color.EMPTY && checkStatus == curCheck) {
             replacePiece(from, to, trash, piece);
-            return false;
+            return true;
         }
         else if ((this.turn % 2 == 1 && curCheck == Color.BLACK) || (this.turn % 2 == 0 && curCheck == Color.WHITE)) {
             replacePiece(from, to, trash, piece);
             curCheck = Color.EMPTY;
-            return false;
+            return true;
         }
         else {
-            return true;
+            return false;
         }
     }
 
-    private void replacePiece(Tile from, Tile to, Piece trash, Piece king) {
+    public Color checkmateHandler() {
+        
+        checkStatus = Move.isCheck(this.board);
+        
+        switch(checkStatus) {
+            case BLACK:
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < 8; j++){
+                        Tile fromTile = this.board.getTile(i, j);
+                        if(fromTile.getColor() == Color.BLACK && !(((fromTile.getPiece()).findMoves(this.board)).isEmpty())) {
+                            return Color.EMPTY;
+                        }
+                    }
+                }
+                return Color.WHITE;
+            case WHITE:
+                for(int i = 0; i < 8; i++){
+                    for(int j = 0; j < 8; j++){
+                        Tile fromTile = this.board.getTile(i, j);
+                        if(fromTile.getColor() == Color.WHITE && !(((fromTile.getPiece()).findMoves(this.board)).isEmpty())) {
+                            return Color.EMPTY;
+                        }
+                    }
+                }
+                return Color.BLACK;
+            case EMPTY:
+                return Color.EMPTY;
+        }
+        return Color.EMPTY;
+    }
+
+    private void replacePiece(Tile from, Tile to, Piece trash, Piece piece) {
         if (trash != null) {
-            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), king));
+            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), piece));
             this.board.setTile(to.getCoordX(), to.getCoordY(), new FullTile(to.getCoordX(), to.getCoordY(), trash));
+            trash = null;
         }
         else {
-            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), king));
+            this.board.setTile(from.getCoordX(), from.getCoordY(), new FullTile(from.getCoordX(), from.getCoordY(), piece));
             this.board.setTile(to.getCoordX(), to.getCoordY(), new EmptyTile(to.getCoordX(), to.getCoordY()));
         }
+    }
+
+    
+    public boolean drawChecker() {
+        int total = countPieces();
+        if(checkStatus == Color.EMPTY && total > 2) {
+            switch(this.turn % 2) {
+                case 0:
+                    for(int i = 0; i < 8; i++){
+                        for(int j = 0; j < 8; j++){
+                            Tile fromTile = this.board.getTile(i, j);
+                            if(fromTile.getColor() == Color.WHITE && !(((fromTile.getPiece()).findMoves(this.board)).isEmpty())) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+
+                case 1:
+                    for(int i = 0; i < 8; i++){
+                        for(int j = 0; j < 8; j++){
+                            Tile fromTile = this.board.getTile(i, j);
+                            if(fromTile.getColor() == Color.BLACK && !(((fromTile.getPiece()).findMoves(this.board)).isEmpty())) {
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+            }
+        }
+        else if (total <= 2) {
+            return true;
+        }
+        return false;
+    }
+    
+    public int countPieces() {
+        int totalPieces = 0;
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if((this.board.getTile(i, j)) instanceof FullTile) {
+                    totalPieces++;
+                }
+            }
+        }
+        return totalPieces;
     }
 
     public List<Move> checkValidMoves(int fromX, int fromY){
