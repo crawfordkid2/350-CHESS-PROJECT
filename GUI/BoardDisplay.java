@@ -89,7 +89,13 @@ public class BoardDisplay {
     private JMenu createPreferencesMenu() {
         final JMenu preferences = new JMenu("Preferences");
         final JMenuItem flipBoardItem = new JMenuItem("Flip Board");
-        flipBoardItem.addActionListener(e -> boardPanel.flipBoardOrientation());
+        flipBoardItem.addActionListener(e -> {
+            try {
+                boardPanel.flipBoardOrientation();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         preferences.add(flipBoardItem);
         return preferences;
     }
@@ -142,7 +148,7 @@ public class BoardDisplay {
         }
 
         // method used to update the board whenever the user executes a move
-        public void drawBoard(final GameEngine game) {
+        public void drawBoard(final GameEngine game) throws InterruptedException {
             removeAll();
             for (final TilePanel tilePanel : boardTiles) {
                 tilePanel.drawTile(game);
@@ -155,7 +161,7 @@ public class BoardDisplay {
             endGame(gameDraw, winner);
         }
 
-        public void flipBoardOrientation() {
+        public void flipBoardOrientation() throws InterruptedException {
             Collections.reverse(boardPanel.boardTiles);
             boardPanel.drawBoard(ChessEngine);
             
@@ -167,7 +173,11 @@ public class BoardDisplay {
 
         public void setUpdate(String update){
             SwingUtilities.invokeLater(() -> {
-                boardPanel.drawBoard(ChessEngine);
+                try {
+                    boardPanel.drawBoard(ChessEngine);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
             });
             this.update = update;
         }
@@ -186,12 +196,16 @@ public class BoardDisplay {
             }
         }
 
-        public void endGame(boolean draw, ENUM.Color winner){
+        public void endGame(boolean draw, ENUM.Color winner) throws InterruptedException {
             if(winner != ENUM.Color.EMPTY){
                 JOptionPane.showMessageDialog(null, "Checkmate: " + winner.name() + " wins.\n");
+                Thread.sleep(4000);
+                System.exit(0);
             }
             else if(draw){
                 JOptionPane.showMessageDialog(null, "Draw");
+                Thread.sleep(4000);
+                System.exit(0);
             }
         }
 
@@ -274,7 +288,11 @@ public class BoardDisplay {
                     }
                     // updates the board each time a move is input.
                     SwingUtilities.invokeLater(() -> {
-                        boardPanel.drawBoard(ChessEngine);
+                        try {
+                            boardPanel.drawBoard(ChessEngine);
+                        } catch (InterruptedException ex) {
+                            throw new RuntimeException(ex);
+                        }
                     });
                 }
 
