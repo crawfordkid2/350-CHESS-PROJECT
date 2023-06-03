@@ -202,13 +202,9 @@ public class BoardDisplay {
             super(new GridBagLayout());
             this.tileId = tileId; // for color and board building logic
 
-            // ran into an issue here where we logically approached the engine with
-            // coords 0,0 in the bottom left of the board, but Swing builds tiles top to bottom
-            // there is no easy way to fix this in Swing, but inverting the coordinates works
-            int invertedID = Math.abs(tileId - 63);
             // example math: tileID 37 should be at x:5, y:4
-            this.xCord = invertedID % 8;
-            this.yCord = invertedID / 8;
+            this.xCord = tileId % 8;
+            this.yCord = tileId / 8;
 
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
@@ -301,8 +297,8 @@ public class BoardDisplay {
                 try {
                     // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.gif
                     final BufferedImage image = ImageIO.read(new File(pieceIconPath +
-                            game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
-                            game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".png"));
+                            game.board.getTile(this.xCord, 7 - this.yCord).getPiece().getColor() +
+                            game.board.getTile(this.xCord, 7 - this.yCord).getPiece().getClass().getSimpleName() + ".png"));
                     add(new JLabel(new ImageIcon(image)));
                 } catch (IOException e) {
                     e.printStackTrace();
