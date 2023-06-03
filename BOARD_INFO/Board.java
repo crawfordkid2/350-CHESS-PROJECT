@@ -55,6 +55,7 @@ public class Board {
                 builtBoard[i][j] = new EmptyTile(i, j);
             }
         }
+
         return builtBoard;
     }
 
