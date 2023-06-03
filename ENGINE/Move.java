@@ -28,6 +28,10 @@ public class Move {
                 case WHITE:
                     Tile leftWhite = board.getTile(0, 0);
                     if(leftWhite.getPiece() instanceof PIECES.Rook && leftWhite.getColor() == Color.WHITE && (leftWhite.getPiece()).firstMove) {
+                        if(findAttacker(board, Color.BLACK, board.getTile(2, 0)) || findAttacker(board, Color.BLACK, board.getTile(3, 0))) {
+                            return false;
+                        }
+
                         for(int i = 3; i > 0; i--) {
                             if (board.getTile(i, 0) instanceof FullTile) {
                                 return false;
@@ -39,6 +43,10 @@ public class Move {
                 case BLACK:
                     Tile leftBlack = board.getTile(0, 7);
                     if(leftBlack.getPiece() instanceof PIECES.Rook && leftBlack.getColor() == Color.BLACK && (leftBlack.getPiece()).firstMove) {
+                        if(findAttacker(board, Color.WHITE, board.getTile(2, 0)) || findAttacker(board, Color.WHITE, board.getTile(3, 0))) {
+                            return false;
+                        }
+
                         for(int i = 3; i > 0; i--) {
                             if (board.getTile(i, 7) instanceof FullTile) {
                                 return false;
@@ -60,6 +68,10 @@ public class Move {
                 case WHITE:
                     Tile rightWhite = board.getTile(0, 0);
                     if(rightWhite.getPiece() instanceof PIECES.Rook && rightWhite.getColor() == Color.WHITE && (rightWhite.getPiece()).firstMove) {
+                        if(findAttacker(board, Color.BLACK, board.getTile(5, 0)) || findAttacker(board, Color.BLACK, board.getTile(6, 0))) {
+                            return false;
+                        }
+                        
                         for(int i = 5; i < 7; i++) {
                             if (board.getTile(i, 0) instanceof FullTile) {
                                 return false;
@@ -71,6 +83,10 @@ public class Move {
                 case BLACK:
                     Tile rightBlack = board.getTile(0, 7);
                     if(rightBlack.getPiece() instanceof PIECES.Rook && rightBlack.getColor() == Color.BLACK && (rightBlack.getPiece()).firstMove) {
+                        if(findAttacker(board, Color.WHITE, board.getTile(5, 0)) || findAttacker(board, Color.WHITE, board.getTile(6, 0))) {
+                            return false;
+                        }
+
                         for(int i = 5; i < 7; i++) {
                             if (board.getTile(i, 7) instanceof FullTile) {
                                 return false;
