@@ -12,7 +12,7 @@ import ENUM.Color;
 public class Main {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         boolean exit = false;
         Color winner = Color.EMPTY;
         boolean gameDraw = false;

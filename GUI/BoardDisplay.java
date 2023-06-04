@@ -52,7 +52,7 @@ public class BoardDisplay {
      * This constructor will also take the parameters online and playerID so that we can manipulate the appearance
      * of the board for player 2
      */
-    public BoardDisplay(GameEngine engine, boolean online, int playerID) {
+    public BoardDisplay(GameEngine engine, boolean online, int playerID) throws InterruptedException {
         this.gameFrame = new JFrame("Chess app");
         this.gameFrame.setLayout(new BorderLayout());
         final JMenuBar tableMenuBar = createTableMenuBar();
@@ -64,6 +64,9 @@ public class BoardDisplay {
         this.gameFrame.setVisible(true);
         this.online = online;
         this.playerID = playerID;
+        if (playerID == 2) {
+            this.boardPanel.flipBoardOrientation();
+        }
     }
 
     /**
