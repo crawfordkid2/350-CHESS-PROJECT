@@ -1,15 +1,12 @@
 package GUI;
 
-import BOARD_INFO.Board;
 import BOARD_INFO.TILES.Tile;
-import ENGINE.*;
-import PIECES.*;
+import ENGINE.GameEngine;
+import ENGINE.Move;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -51,19 +48,9 @@ public class BoardDisplay {
      * Creates a new JFrame that represents the chess board.
      * tableMenuBar is the menu users can select options like exit, swap orientation from, a helper method is used
      * after the board display is set up, a chess engine is created so the gui can communicate with the back end.
+     * This constructor will also take the parameters online and playerID so that we can manipulate the appearance
+     * of the board for player 2
      */
-    public BoardDisplay() {
-        this.gameFrame = new JFrame("Chess app");
-        this.gameFrame.setLayout(new BorderLayout());
-        final JMenuBar tableMenuBar = createTableMenuBar();
-        this.gameFrame.setJMenuBar(tableMenuBar);
-        this.gameFrame.setSize(OUTER_FRAME_DIMENSION);
-        this.ChessEngine = new GameEngine(new Board());
-        this.boardPanel = new BoardPanel();
-        this.gameFrame.add(this.boardPanel, BorderLayout.CENTER);
-        this.gameFrame.setVisible(true);
-        this.online = false;
-    }
     public BoardDisplay(GameEngine engine, boolean online, int playerID) {
         this.gameFrame = new JFrame("Chess app");
         this.gameFrame.setLayout(new BorderLayout());
@@ -78,7 +65,10 @@ public class BoardDisplay {
         this.playerID = playerID;
     }
 
-    // helper method to populate menu
+    /**
+     * This method creates the options at the top of the window. Inside this method are calls to createFileMenu() and
+     * createPreferencesMenu() to reduce code clutter
+     */
     private JMenuBar createTableMenuBar() {
         final JMenuBar tableMenuBar = new JMenuBar();
         tableMenuBar.add(createFileMenu());
@@ -86,6 +76,12 @@ public class BoardDisplay {
         return tableMenuBar;
     }
 
+    /**
+     * This helper method will be used in createTableMenuBar() to display a preferences option for the user.
+     * The preferences menu will contain an option for the user to flip the board orientation. In a two player
+     * game the board orientation will automatically flip for player 2, however this gives them the option
+     * to display the board however they please
+     */
     private JMenu createPreferencesMenu() {
         final JMenu preferences = new JMenu("Preferences");
         final JMenuItem flipBoardItem = new JMenuItem("Flip Board");
@@ -100,7 +96,10 @@ public class BoardDisplay {
         return preferences;
     }
 
-    // contains all menu options
+    /**
+     * This helper method will be used in createTableMenuBar() to display a menu option for the user.
+     * all this contains as of now is an option to exit the program
+     */
     private JMenu createFileMenu() {
         final JMenu fileMenu = new JMenu("Menu");
         // allows user to terminate game
@@ -110,6 +109,9 @@ public class BoardDisplay {
         return fileMenu;
     }
 
+    /**
+     * get and set update are used to communicate moves made on the GUI with the game server
+     */
     public String getUpdate(){
         return this.boardPanel.getUpdate();
     }
@@ -118,6 +120,7 @@ public class BoardDisplay {
         this.boardPanel.setUpdate(update);
     }
 
+    // keeps track of turns so player 1 cannot move while it's player 2's turn
     public void setTurnToggle(boolean toggle){
         this.turnToggle = toggle;
     }
@@ -132,6 +135,7 @@ public class BoardDisplay {
         final List<TilePanel> boardTiles;
         private String update = "";
 
+        // populates boardTiles list and sets them to display as a 8x8 grid
         BoardPanel() {
             super(new GridLayout(8,8));
             this.boardTiles = new ArrayList<>();
@@ -164,7 +168,6 @@ public class BoardDisplay {
         public void flipBoardOrientation() throws InterruptedException {
             Collections.reverse(boardPanel.boardTiles);
             boardPanel.drawBoard(ChessEngine);
-            
         }
         
         public String getUpdate(){
@@ -187,6 +190,9 @@ public class BoardDisplay {
             for(Move move : validMoves){
                 int x = move.getNew().getCoordX();
                 int y = move.getNew().getCoordY();
+                // we need to do some math on the coordinates because Swing populates the grid starting from
+                // the top left, but logically the coordinates start from the bottom left. This caused the board
+                // to originally display black pieces on the bottom, and they were mirrored horizontally.
                 this.boardTiles.get(Math.abs(((7-y) * 8 + x))).isHighlighted = true;
             }
         }
@@ -199,12 +205,12 @@ public class BoardDisplay {
         public void endGame(boolean draw, ENUM.Color winner) throws InterruptedException {
             if(winner != ENUM.Color.EMPTY){
                 JOptionPane.showMessageDialog(null, "Checkmate: " + winner.name() + " wins.\n");
-                Thread.sleep(4000);
+                Thread.sleep(4000); // allows user to see the message for 4 seconds, then terminates the program
                 System.exit(0);
             }
             else if(draw){
                 JOptionPane.showMessageDialog(null, "Draw");
-                Thread.sleep(4000);
+                Thread.sleep(4000); // allows user to see the message for 4 seconds, then terminates the program
                 System.exit(0);
             }
         }
@@ -233,13 +239,11 @@ public class BoardDisplay {
             super(new GridBagLayout());
             this.tileId = tileId; // for color and board building logic
 
-            // ran into an issue here where we logically approached the engine with
-            // coords 0,0 in the bottom left of the board, but Swing builds tiles top to bottom
-            // there is no easy way to fix this in Swing, but inverting the coordinates works
-
-
+            // example math: tileId 37
+            // xCord = 37 % 8 = 5
+            // yCord = 7 - (37 / 8) = 3
             this.xCord = tileId % 8;
-            this.yCord = 7-(tileId / 8);
+            this.yCord = 7-(tileId / 8); // originally black pieces displayed on the bottom. 7-(math) inverts the y coords
 
             setPreferredSize(TILE_PANEL_DIMENSION);
             assignTileColor();
@@ -251,19 +255,20 @@ public class BoardDisplay {
                     // right mouse deselects the current piece by setting those globals to null
                     if (isRightMouseButton(e) && turnToggle) {
                         sourceTile = null;
-                        System.out.println("Deselect");
                         destinationTile = null;
                         boardPanel.unHighlight();
                     }
                     // left mouse button selects.
                     else if (isLeftMouseButton(e) && turnToggle) {
                         Tile currTile = ChessEngine.board.getTile(xCord, yCord);
-                        if (sourceTile == null && (currTile.getColor() == ENUM.Color.BLACK && ChessEngine.turn % 2 == 1) || (currTile.getColor() == ENUM.Color.WHITE && ChessEngine.turn % 2 == 0)) { // if this is user's first click, then that is a source tile
+                        // if this is user's first click, then that is a source tile. Extra conditions
+                        // ensure moves are only made when it is that players turn.
+                        if (sourceTile == null && (currTile.getColor() == ENUM.Color.BLACK && ChessEngine.turn % 2 == 1)
+                                || (currTile.getColor() == ENUM.Color.WHITE && ChessEngine.turn % 2 == 0)) {
                             boardPanel.unHighlight();
                             sourceTile = ChessEngine.board.getTile(xCord, yCord);
                             isHighlighted = true;
                             boardPanel.showValidMoves(xCord, yCord);
-                            System.out.println("Left 1");
                         }
                         else { // user has already selected a source tile, so this is a destination tile
                             destinationTile = ChessEngine.board.getTile(xCord, yCord);
@@ -273,16 +278,13 @@ public class BoardDisplay {
                             move += sourceTile.getCoordY() + 1;
                             move += (char)(destinationTile.getCoordX() + 97);
                             move += destinationTile.getCoordY() + 1;
-                            if(ChessEngine.tryMove(move) && online == true){
+                            if(ChessEngine.tryMove(move) && online){
                                 boardPanel.setUpdate(move);;
-                                
-                                
                             } // execute move
                             // reset selections
                             sourceTile = null;
                             destinationTile = null;
                             boardPanel.unHighlight();
-                            System.out.println("Left 2");
                         }
 
                     }
@@ -296,6 +298,7 @@ public class BoardDisplay {
                     });
                 }
 
+                // these must be implemented per MouseListener API, however we have no use for these in the program
                 @Override
                 public void mousePressed(MouseEvent e) {
 
@@ -330,13 +333,13 @@ public class BoardDisplay {
         /**
          * This method assigns each tile piece icon. The way I handled this was looping through each tile, if it
          * was full I created a BufferedImage by reading the piece color and name, then directing the imageIO to the
-         * proper .gif image
+         * proper .png image. Please note that the icons should be in a folder in the project directory
          */
         private void assignPieceIcon(final GameEngine game) {
             this.removeAll();
             if (game.board.getTile(this.xCord, this.yCord).isFull()) {
                 try {
-                    // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.gif
+                    // file layout as follows : pieceIconPath in directory/ (WHITE/BLACK)PIECENAME.png
                     final BufferedImage image = ImageIO.read(new File(pieceIconPath +
                     game.board.getTile(this.xCord, this.yCord).getPiece().getColor() +
                     game.board.getTile(this.xCord, this.yCord).getPiece().getClass().getSimpleName() + ".png"));
@@ -351,7 +354,7 @@ public class BoardDisplay {
         private void assignTileColor() {
             boolean isLight = ((tileId + tileId / 8) % 2 == 0);
             setBackground(isLight ? lightTileColor : darkTileColor);
-            if(isHighlighted){
+            if(isHighlighted) { // handles highlighted colors
                 setBackground(isLight? lightHighlightColor : darkHighlightColor);
             }
         }
