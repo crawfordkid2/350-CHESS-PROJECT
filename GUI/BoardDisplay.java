@@ -43,6 +43,7 @@ public class BoardDisplay {
     private int playerID;
     private ENUM.Color winner = ENUM.Color.EMPTY;
     private boolean gameDraw = false;
+    private boolean isFlipped = false;
 
     /**
      * Creates a new JFrame that represents the chess board.
@@ -168,6 +169,7 @@ public class BoardDisplay {
         public void flipBoardOrientation() throws InterruptedException {
             Collections.reverse(boardPanel.boardTiles);
             boardPanel.drawBoard(ChessEngine);
+            isFlipped = !isFlipped;
         }
         
         public String getUpdate(){
@@ -193,6 +195,8 @@ public class BoardDisplay {
                 // we need to do some math on the coordinates because Swing populates the grid starting from
                 // the top left, but logically the coordinates start from the bottom left. This caused the board
                 // to originally display black pieces on the bottom, and they were mirrored horizontally.
+                x = (isFlipped ? 7-x : x);
+                y = (isFlipped ? 7-y : y);
                 this.boardTiles.get(Math.abs(((7-y) * 8 + x))).isHighlighted = true;
             }
         }
