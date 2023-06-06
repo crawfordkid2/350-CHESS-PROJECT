@@ -74,9 +74,3 @@ The project structure is organized as follows:
 - **Main & Multiplayer**: Contain the required logic for all the classes to work together. Changes to these files may result in cascading errors.
 
 - **GUI**: Contains everything related to the GUI. The BoardDisplay class includes everything required to make the GUI run.
-
-Feel free to explore and modify the code as needed for your purposes.
-
----
-
-I have reformatted and cleaned up the README for your Java chess app. Let me know if you need any further assistance!
