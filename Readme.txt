@@ -1,40 +1,82 @@
-CHESS APP JAVA README
+# Chess App Java README
 
-This is a 100% Java chess application which supports terminal and GUI for move inputs, and Local or Multiplayer play.
+This is a Java chess application that supports both terminal and GUI for move inputs, as well as local or multiplayer play.
 
-We have made it so there is almost no setup required for users trying to run this application. First you must ensure you have Java 17 installed on your machine. 
+## Java Installation Guide
 
-JAVA INSTALLATION GUIDE:
+To run this application, make sure you have Java 17 installed on your machine. Use the following instructions based on your operating system:
 
-MACOS: If you have home-brew, run brew install openjdk@17
+### macOS
 
-Windows/Non-Homebrew Mac: https://www.oracle.com/java/technologies/downloads/#java17
+If you have Homebrew, run the following command to install OpenJDK 17:
 
-Once you have installed the proper version of java you can download the source code. Everything on the GitHub is required for the program to run.
+```
+brew install openjdk@17
+```
 
-Navigate to the source code directory in your terminal and do the following:
+### Windows / Non-Homebrew macOS
 
-For Local Play: 
-	- java -jar ChessMain.jar
-	- Enter L for local play and you're in! GUI will automatically pop up, and if the terminal 	will be printing the board as well.
+Visit the Oracle website at [https://www.oracle.com/java/technologies/downloads/#java17](https://www.oracle.com/java/technologies/downloads/#java17) and download the appropriate Java 17 installer for your system.
 
-For Multiplayer Play:
-	- Whoever is hosting should execute java -jar ChessMultiplayer.jar, then execute java -jar 	ChessMain.jar
-	- Player 2 only needs to run java -jar ChessMain.jar
-	- Enter O to opt for Online play, enter the IP address (Public IP of whoever ran 		ChessMultiplayer.jar)
+## Running the Application
 
+Once you have installed the proper version of Java, follow these steps:
 
+1. Download the source code from GitHub. All files are required for the program to run.
+2. Navigate to the source code directory in your terminal.
 
-DEVELOPERS:
+### Local Play
 
-BOARD_INFO contains all files related to the Chess Board. In this directory there are classes which define Tiles and the actual Chess Board. The Board Class contains the method to initialize and print the board.
+For local play, execute the following command:
 
-ENGINE contains all files related to the Chess Engine. This directory contains the main logic of the chess game. ChessEngine and Move classes will work together to handle all rules of chess like valid moves, win conditions, restarting the board etc.
+```
+java -jar ChessMain.jar
+```
 
-ENUM contains a simple enum class which defines the color of pieces, WHITE, BLACK and EMPTY for tiles which don't contain a piece
+Then enter "L" to start local play. The GUI will automatically pop up, and the terminal will display the board.
 
-PIECES contains the abstract class piece which all the chess pieces inherit from. This contains information about piece position, collision checking and piece promotion
+### Multiplayer Play
 
-Main & Multiplayer contain the required logic for all these classes to work together. Changes to Main and Multiplayer will most likely have cascading errors
+For multiplayer play, follow these steps:
 
-GUI: Contains everything related to the GUI. BoardDisplay contains everything required to make the GUI run
+1. The player hosting the game should execute the following command:
+
+```
+java -jar ChessMultiplayer.jar
+```
+
+2. Next, the host should execute the following command:
+
+```
+java -jar ChessMain.jar
+```
+
+3. Player 2 only needs to run the following command:
+
+```
+java -jar ChessMain.jar
+```
+
+4. Enter "O" to opt for online play and provide the IP address (the public IP of the host who ran ChessMultiplayer.jar).
+
+## Developers
+
+The project structure is organized as follows:
+
+- **BOARD_INFO**: Contains files related to the Chess Board. This directory includes classes that define Tiles and the actual Chess Board. The Board Class contains methods to initialize and print the board.
+
+- **ENGINE**: Contains files related to the Chess Engine. This directory includes the main logic of the chess game. The ChessEngine and Move classes work together to handle all rules of chess, such as valid moves, win conditions, and board restarts.
+
+- **ENUM**: Contains a simple enum class that defines the color of pieces: WHITE, BLACK, and EMPTY for tiles without a piece.
+
+- **PIECES**: Contains the abstract class "Piece," from which all the chess pieces inherit. This class contains information about piece positions, collision checking, and piece promotion.
+
+- **Main & Multiplayer**: Contain the required logic for all the classes to work together. Changes to these files may result in cascading errors.
+
+- **GUI**: Contains everything related to the GUI. The BoardDisplay class includes everything required to make the GUI run.
+
+Feel free to explore and modify the code as needed for your purposes.
+
+---
+
+I have reformatted and cleaned up the README for your Java chess app. Let me know if you need any further assistance!
